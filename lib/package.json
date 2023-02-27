@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "ava",
+    "test:watch": "ava --watch",
     "typecheck": "tsc"
   },
   "type": "module",
