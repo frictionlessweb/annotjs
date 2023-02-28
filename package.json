@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "start": "npm run dev --prefix docs",
+    "build": "npm run build --prefix docs",
+    "test": "npm test --prefix lib && npm test --prefix docs"
+  }
+}
