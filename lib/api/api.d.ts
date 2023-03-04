@@ -1,10 +1,24 @@
-import { ExtractResult } from "./api";
+import { Bounds } from "../math/math";
 
-export interface Bounds {
-  top: number;
-  left: number;
-  width: number;
+type ExtractBounds = [number, number, number, number];
+
+export interface Element {
+  Bounds: ExtractBounds;
+  CharBounds: ExtractBounds[];
+  Page: number;
+  Text?: string;
+  Kids?: Element[];
+}
+
+export interface Page {
   height: number;
+  width: number;
+  page_number: number;
+}
+
+export interface ExtractResult {
+  elements: Element[];
+  pages: Page[];
 }
 
 export interface Paragraph {
@@ -36,7 +50,5 @@ export interface AnnotContext {
   words: Word[];
   characters: Character[];
 }
-
-export const areOverlapping: (a: Bounds, b: Bounds) => true;
 
 export const analyzeElements: (api: ExtractResult) => AnnotContext;
