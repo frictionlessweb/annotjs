@@ -1,0 +1,40 @@
+@font-face {
+  font-family: "Source Code Pro";
+  src: url("/fonts/SourceCodePro-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Adobe Clean";
+  src: url("/fonts/AdobeClean-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Source Serif Pro";
+  src: url("/fonts/SourceSerifPro-Regular.ttf");
+}
+
+html,
+body,
+pre {
+  margin: 0px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Source Serif Pro";
+  margin: 0px;
+}
+
+p,
+a {
+  font-family: "Adobe Clean";
+  margin: 0px;
+}
+
+code {
+  font-family: "Source Code Pro";
+}

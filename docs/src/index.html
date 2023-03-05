@@ -3,11 +3,39 @@
   <head>
     <title>Annotjs</title>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/annotjs.svg" />
+    <link rel="stylesheet" href="/css/highlight.css" />
+    <link rel="icon" type="image/svg+xml" href="/images/annotjs.svg" />
+    <link rel="stylesheet" href="/css/global.css" />
+    <meta
+      name="description"
+      content="Annotjs - A JavaScript Annotation Library"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
-    <div>Annot JS</div>
-    <a href="/demo/">Go to Demo</a>
+    <div
+      style="
+        display: flex;
+        flex-direction: column;
+        padding: 16px;
+        font-weight: 900;
+      "
+    >
+      <h1 style="padding-bottom: 16px">Annotjs</h1>
+      <p style="padding-bottom: 16px">
+        A library for rapidly creating web applications involving PDF documents.
+      </p>
+      <pre class="language-jsx">
+        <code>const SomeComponent = () => {
+  return (
+     &lt;PDF extractApi={extractApi}&gt;
+       &lt;CreateAnnotationLayer onNewAnnotation /&gt;
+     &lt;/PDF&gt;
+    );
+}
+</code>
+      </pre>
+      <script type="module" src="/scripts/highlight-text.js" defer></script>
+    </div>
   </body>
 </html>
