@@ -1,23 +1,25 @@
-import { Flex, Text, Heading } from "@adobe/react-spectrum";
+import { Flex } from "@adobe/react-spectrum";
+import { Heading, Text } from "@/components/Typography";
+import Link from "next/link";
 
 const Home = () => {
   return (
     <Flex direction="column">
-      <Heading>AnnotJS</Heading>
+      <Heading level={1}>Annotjs</Heading>
+      <Text marginBottom="16px">
+        A library for rapidly building sophisticated applications on top of PDF
+        documents.
+      </Text>
+      <iframe
+        style={{ border: "2px solid grey" }}
+        src="https://flexlabel.org"
+      ></iframe>
       <Flex UNSAFE_style={{ maxWidth: "500px" }} direction="column">
         <Text marginTop="8px" marginBottom="4px">
           <span style={{ fontWeight: "bold" }}>WARNING: </span>This library is
-          currently a work in progress.
-        </Text>
-        <Text marginY="8px">
-          Our approach to working with PDF documents comes from our experience
-          working with <a href="https://github.com/allenai/pawls">Pawls</a> and
-          developing the <a href="https://forma11y.org">Forma11y</a> project.
-        </Text>
-        <Text>
-          We have used the technology developed here in multiple research
-          applications with multiple developers and have established which parts
-          of the API work well and which ones do not.
+          currently a work in progress. After having used it in several research
+          applications, we are currently in the process of making the technology
+          production ready
         </Text>
       </Flex>
     </Flex>
