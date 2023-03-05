@@ -1,11 +1,11 @@
-import { Bounds } from "../math/math";
+import { Bounds } from "../math/math.js";
 
 type ExtractBounds = [number, number, number, number];
 
 export interface Element {
-  Bounds: ExtractBounds;
-  CharBounds: ExtractBounds[];
-  Page: number;
+  Bounds?: ExtractBounds;
+  CharBounds?: ExtractBounds[];
+  Page?: number;
   Text?: string;
   Kids?: Element[];
 }
@@ -52,3 +52,4 @@ export interface AnnotContext {
 }
 
 export const analyzeElements: (api: ExtractResult) => AnnotContext;
+export const fourNumbersToBounds: (nums: ExtractBounds, page: Page) => Bounds;

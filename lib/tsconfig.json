@@ -4,6 +4,7 @@
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
     "checkJs": true,
+    "module": "Node16",
     "noEmit": true
   }
 }

@@ -24,9 +24,9 @@ const Home = () => {
         <Text marginTop="8px" marginBottom="4px">
           <span style={{ fontWeight: "bold" }}>WARNING: </span>This library is
           currently a work in progress. We have used this technology in several
-          applications and learned what sorts of API designs work well and which
-          ones do not; we are in the process of implementing the designs
-          described here, which should be suitable for production applications.
+          research applications and learned what sorts of API designs work well
+          and which ones do not; we are in the process of writing a package will
+          be suitable for general production use.
         </Text>
         <Text marginTop="8px">
           If you have feedback about the ideas outlined on this web page, please
