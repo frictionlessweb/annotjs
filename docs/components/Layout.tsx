@@ -12,14 +12,17 @@ interface NavItemProps {
 const NavItem = (props: NavItemProps) => {
   const { text, href } = props;
   const router = useRouter();
+  const [textDecoration, setTextDecoration] = React.useState("inherit");
   return (
     <div
       onClick={() => {
         router.push(href);
       }}
+      onMouseEnter={() => setTextDecoration("underline")}
+      onMouseLeave={() => setTextDecoration("inherit")}
       style={{ cursor: "pointer" }}
     >
-      <Text>{text.toUpperCase()}</Text>
+      <Text UNSAFE_style={{ textDecoration }}>{text.toUpperCase()}</Text>
     </div>
   );
 };
@@ -32,16 +35,27 @@ const Layout = (props: LayoutProps) => {
   const { children } = props;
   return (
     <Flex direction="column" alignItems="center" marginX="32px">
-      <Flex justifyContent="space-between" width="300px" marginTop="16px">
-        <NavItem text="Intro" href="/" />
-        <NavItem text="Demo" href="/#demo" />
-        <NavItem
-          text="GitHub"
-          href="https://github.com/frictionlessweb/annotjs"
-        />
-        <NavItem text="API" href="/#api" />
+      <Flex
+        justifyContent="center"
+        position="fixed"
+        UNSAFE_style={{
+          width: "100%",
+          height: "32px",
+          paddingTop: "8px",
+          backgroundColor: '#dcdcdc',
+        }}
+      >
+        <Flex width="300px" justifyContent="space-between">
+          <NavItem text="Intro" href="/" />
+          <NavItem text="Demo" href="/#demo" />
+          <NavItem text="API" href="/#api" />
+          <NavItem
+            text="GitHub"
+            href="https://github.com/frictionlessweb/annotjs"
+          />
+        </Flex>
       </Flex>
-      <Flex marginTop="16px" direction="column" alignItems="center">
+      <Flex marginTop="48px" direction="column" alignItems="center">
         {children}
       </Flex>
     </Flex>

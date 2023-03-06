@@ -51,5 +51,8 @@ export interface AnnotContext {
   characters: Character[];
 }
 
+export const groupCharactersIntoWordGroups: (
+  characters: Character[]
+) => Character[][];
 export const analyzeElements: (api: ExtractResult) => AnnotContext;
 export const fourNumbersToBounds: (nums: ExtractBounds, page: Page) => Bounds;

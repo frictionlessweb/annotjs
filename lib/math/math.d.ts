@@ -8,3 +8,5 @@ export interface Bounds {
 export const areOverlapping: (a: Bounds, b: Bounds) => boolean;
 
 export const serializeBounds: (bounds: Bounds) => string;
+
+export const boxContaining: (bounds: Bounds[]) => Bounds;
