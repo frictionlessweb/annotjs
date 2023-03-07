@@ -49,6 +49,7 @@ export interface AnnotContext {
   paragraphs: Paragraph[];
   words: Word[];
   characters: Character[];
+  textContent: string;
 }
 
 export const groupCharactersIntoWordGroups: (

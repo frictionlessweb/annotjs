@@ -42,7 +42,7 @@ const Layout = (props: LayoutProps) => {
           width: "100%",
           height: "32px",
           paddingTop: "8px",
-          backgroundColor: '#dcdcdc',
+          backgroundColor: "#dcdcdc",
         }}
       >
         <Flex width="300px" justifyContent="space-between">
