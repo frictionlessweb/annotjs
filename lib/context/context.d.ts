@@ -5,12 +5,18 @@ export interface ExtractDocumentProviderContextInitializer {
   extract: ExtractResult;
   url: string;
   currentPage: number;
+  fileName: string;
+  clientId: string;
+  headers?: Array<any>;
 }
 
 export interface ExtractDocumentProviderContextValue {
   url: string;
   currentPage: number;
   documentContext: DocumentContext;
+  fileName: string;
+  clientId: string;
+  headers?: Array<any>;
 }
 
 export interface ExtractDocumentProviderProps {
