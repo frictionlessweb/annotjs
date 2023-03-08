@@ -1,8 +1,13 @@
+import React from "react";
 import { Flex } from "@adobe/react-spectrum";
 import { Heading, Text } from "@/components/Typography";
 import Highlight from "react-highlight";
 import "highlight.js/styles/dracula.css";
-import { ExtractDocumentProvider, RenderPDFDocumentLayer } from "annotjs";
+import {
+  ExtractDocumentProvider,
+  RenderPDFDocumentLayer,
+  useDocument,
+} from "annotjs";
 import dynamic from "next/dynamic";
 import api from "./api.json";
 const RelativePDFContainer = dynamic(() => import("./RelativePDFContainer"), {
@@ -111,7 +116,40 @@ const EXTRACT_DOCUMENT_VALUE = {
   extract: api,
 };
 
+const ExampleLayer = () => {
+  const {
+    currentPage,
+    documentContext: { characters, paragraphs, words },
+  } = useDocument();
+  return (
+    <>
+      {words
+        .filter((word) => word.page === currentPage)
+        .map((word) => {
+          return (
+            <div
+              key={word.id}
+              style={{
+                position: "absolute",
+                ...word.bounds,
+                backgroundColor: "red",
+                opacity: 0.3,
+              }}
+            />
+          );
+        })}
+    </>
+  );
+};
+
 const Home = () => {
+  const [page, setPage] = React.useState(0);
+  const value = React.useMemo(() => {
+    return {
+      ...EXTRACT_DOCUMENT_VALUE,
+      currentPage: page,
+    };
+  }, [page]);
   return (
     <Flex direction="column">
       <Heading id="intro" level={1}>
@@ -129,8 +167,8 @@ const Home = () => {
         id="demo"
       >
         <Heading level={2}>Demo</Heading>
-        {/* @ts-expect-error - The API is ok. */}
-        <ExtractDocumentProvider value={EXTRACT_DOCUMENT_VALUE}>
+        {/* @ts-expect-error - We know the API is ok. */}
+        <ExtractDocumentProvider value={value}>
           <RelativePDFContainer
             style={{ border: "2px solid grey", marginTop: "16px" }}
           >
