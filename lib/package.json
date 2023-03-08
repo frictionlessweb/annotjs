@@ -6,7 +6,8 @@
   "scripts": {
     "test": "ava",
     "test:watch": "ava --watch",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "lint": "eslint --fix --max-warnings=0 . --ext .js"
   },
   "type": "module",
   "author": "Joshua Hoeflich",
@@ -19,10 +20,43 @@
     "@types/jsdom": "^21.1.0",
     "@types/node": "^18.14.6",
     "@types/react": "^18.0.28",
+    "@typescript-eslint/eslint-plugin": "^5.54.1",
+    "@typescript-eslint/parser": "^5.54.1",
     "ava": "^5.2.0",
+    "eslint": "^8.35.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "jsdom": "^21.1.0",
     "react": "^18.2.0",
     "react-rnd": "^10.4.1",
     "typescript": "^4.9.5"
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "es2021": true
+    },
+    "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended",
+      "plugin:@typescript-eslint/recommended"
+    ],
+    "overrides": [],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "ecmaVersion": "latest",
+      "sourceType": "module"
+    },
+    "plugins": [
+      "react",
+      "@typescript-eslint",
+      "react-hooks"
+    ],
+    "settings": {
+      "react": {
+        "version": "detect"
+      }
+    },
+    "rules": {}
   }
 }
