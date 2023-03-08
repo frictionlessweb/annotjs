@@ -8,7 +8,7 @@ const HIGHLIGHTING_TEXT = `const HighlightText = ({ extractApi }) => {
   return (
     <PDFProvider extractApi={extractApi}>
       <PDFRenderLayer />
-      <HighlightLayer words={["highlight", "these", "words", "please"]} />
+      <HighlightLayer strings={["highlight", "these", "words", "please"]} />
     </PDFProvider>
   )
 }`.trim();

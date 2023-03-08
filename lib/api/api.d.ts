@@ -45,7 +45,7 @@ export interface Character {
   word_id: string;
 }
 
-export interface AnnotContext {
+export interface DocumentContext {
   paragraphs: Paragraph[];
   words: Word[];
   characters: Character[];
@@ -55,5 +55,5 @@ export interface AnnotContext {
 export const groupCharactersIntoWordGroups: (
   characters: Character[]
 ) => Character[][];
-export const analyzeElements: (api: ExtractResult) => AnnotContext;
+export const analyzeElements: (api: ExtractResult) => DocumentContext;
 export const fourNumbersToBounds: (nums: ExtractBounds, page: Page) => Bounds;

@@ -1,5 +1,5 @@
 import React from "react";
-import type { ExtractResult, AnnotContext } from "../api/api.js";
+import type { ExtractResult, DocumentContext } from "../api/api.js";
 
 export interface ExtractDocumentProviderProps {
   children: React.ReactNode;
@@ -10,4 +10,4 @@ export const ExtractDocumentProvider: (
   props: ExtractDocumentProviderProps
 ) => JSX.Element;
 
-export const useDocument: () => AnnotContext;
+export const useDocument: () => DocumentContext;
