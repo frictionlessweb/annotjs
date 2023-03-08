@@ -1,17 +1,35 @@
 import { Flex } from "@adobe/react-spectrum";
 import { Heading, Text } from "@/components/Typography";
-import Link from "next/link";
 import Highlight from "react-highlight";
 import "highlight.js/styles/dracula.css";
+import { ExtractDocumentProvider, RenderPDFDocumentLayer } from "annotjs";
+import dynamic from "next/dynamic";
+import api from "./api.json";
+const RelativePDFContainer = dynamic(() => import("./RelativePDFContainer"), {
+  ssr: false,
+  loading: () => <Text>Loading PDF...</Text>,
+});
 
-const HIGHLIGHTING_TEXT = `const HighlightText = ({ extractApi }) => {
+const CLIENT_ID: string = process.env.NEXT_PUBLIC_ADOBE_EMBED_API_KEY as string;
+
+const HIGHLIGHTING_TEXT = `const HighlightText = ({ extractValues }) => {
   return (
-    <PDFProvider extractApi={extractApi}>
-      <PDFRenderLayer />
-      <HighlightLayer strings={["highlight", "these", "words", "please"]} />
-    </PDFProvider>
+    <ExtractDocumentProvider value={extractValues}>
+      <RelativePDFContainer style={{ border: '2px solid grey' }}>
+        <RenderPDFDocumentLayer />
+        <HighlightTextLayer strings={["highlight", "these", "words", "please"]} />
+      </RelativePDFContainer>
+    </ExtractDocumentProvider>
   )
 }`.trim();
+
+const EXTRACT_DOCUMENT_VALUE = {
+  clientId: CLIENT_ID,
+  fileName: "AudioDemo.pdf",
+  url: "/AudioDemo.pdf",
+  currentPage: 1,
+  extract: api,
+};
 
 const Home = () => {
   return (
@@ -25,27 +43,36 @@ const Home = () => {
           PDF documents.
         </Text>
       </Flex>
-      <Flex direction="column" UNSAFE_style={{ maxWidth: "600px" }}>
-        <Heading id="demo" level={2}>
-          Demo
-        </Heading>
-        <Text marginBottom="16px">
-          Try exploring the window below. If you would like to view the demo in
-          a separate tab, try visiting{" "}
-          <Link href="https://flexlabel.org">flexlabel.org</Link> and click
-          around there.
+      <Flex
+        direction="column"
+        UNSAFE_style={{ maxWidth: "600px", scrollMarginTop: "50px" }}
+        id="demo"
+      >
+        <Heading level={2}>Demo</Heading>
+        <Text marginBottom="8px">
+          Below is a small application built with Annotjs that allows users to
+          select text in a PDF document and hear it read out loud back to them.
+          This library provides the functionality to make writing such code easy
+          with just a little bit of React! Feel free to play around with it.
         </Text>
+        <Text marginBottom="16px">
+          When you are ready to learn more and start playing around with the
+          library yourself, see the API section for documentation about how
+          precisely to go about doing so.
+        </Text>
+        {/* @ts-expect-error - The API is ok. */}
+        <ExtractDocumentProvider value={EXTRACT_DOCUMENT_VALUE}>
+          <RelativePDFContainer style={{ border: "2px solid grey" }}>
+            <RenderPDFDocumentLayer />
+          </RelativePDFContainer>
+        </ExtractDocumentProvider>
       </Flex>
-      <iframe
-        id="demo-iframe"
-        style={{
-          border: "2px solid grey",
-          height: "400px",
-        }}
-        src="https://flexlabel.org"
-      ></iframe>
-      <Flex UNSAFE_style={{ maxWidth: "600px" }} direction="column">
-        <Heading id="api" level={2} marginTop="16px">
+      <Flex
+        UNSAFE_style={{ maxWidth: "600px", scrollMarginTop: "50px" }}
+        direction="column"
+        id="api"
+      >
+        <Heading level={2} marginTop="16px">
           API
         </Heading>
         <Text>
