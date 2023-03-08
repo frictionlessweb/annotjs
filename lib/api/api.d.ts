@@ -50,6 +50,7 @@ export interface DocumentContext {
   words: Word[];
   characters: Character[];
   textContent: string;
+  pages: Page[];
 }
 
 export const groupCharactersIntoWordGroups: (
