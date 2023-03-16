@@ -3,6 +3,10 @@
     "start": "npm run dev --prefix docs",
     "build": "npm run build --prefix docs",
     "test": "npm test --prefix lib && npm test --prefix docs",
-    "setup": "npm install --prefix docs && npm install --prefix lib"
-  }
+    "setup": "npm install"
+  },
+  "workspaces": [
+    "docs",
+    "lib"
+  ]
 }
