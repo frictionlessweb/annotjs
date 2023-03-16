@@ -176,6 +176,7 @@ const Home = () => {
           </RelativePDFContainer>
         </ExtractDocumentProvider>
       </Flex>
+      <Documentation />
     </Flex>
   );
 };

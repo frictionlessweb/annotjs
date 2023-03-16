@@ -49,6 +49,7 @@ const Layout = (props: LayoutProps) => {
         <Flex width="300px" justifyContent="space-between">
           <NavItem text="Intro" href="/" />
           <NavItem text="Demo" href="/#demo" />
+          <NavItem text="API" href="/#api" />
           <NavItem
             text="GitHub"
             href="https://github.com/frictionlessweb/annotjs"
