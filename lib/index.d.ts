@@ -7,3 +7,4 @@ export * from "./math/math.js";
 export { analyzeElements } from "./api/api.js";
 export * from "./context/context.js";
 export * from './DrawLayer/pdflayer.js';
+export * from './HighlightLayer/highlight.js';
