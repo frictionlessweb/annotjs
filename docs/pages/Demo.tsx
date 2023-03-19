@@ -37,16 +37,17 @@ const DemoIntroduction = () => {
 interface SpokenHighlightsProps {
   listening: boolean;
   setListening: React.Dispatch<React.SetStateAction<boolean>>;
+  highlights: string[];
+  setHighlights: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const VOICE_INDEX = 20;
 
 const SpokenHighlights = (props: SpokenHighlightsProps) => {
-  const { listening, setListening } = props;
+  const { listening, setListening, highlights, setHighlights } = props;
   const {
     documentContext: { paragraphs },
   } = useDocument();
-  const [highlights, setHighlights] = React.useState<string[]>([]);
   useVoiceControls({
     listening,
     setListening,
@@ -69,16 +70,17 @@ const SpokenHighlights = (props: SpokenHighlightsProps) => {
   React.useEffect(() => {
     if (!listening) return;
     setHighlights([]);
-  }, [listening]);
+  }, [listening, setHighlights]);
   return <HighlightTextLayer highlights={highlights} />;
 };
 
 const DemoCore = () => {
   const [listening, setListening] = React.useState(false);
+  const [highlights, setHighlights] = React.useState<string[]>([]);
   const value = React.useMemo(() => {
     return {
       ...EXTRACT_DOCUMENT_VALUE,
-      currentPage: 0,
+      currentPage: 1,
     };
   }, []);
   return (
@@ -99,8 +101,12 @@ const DemoCore = () => {
           <Flex>
             <Button
               variant="primary"
-              isDisabled={!listening}
-              onPress={() => setListening(false)}
+              isDisabled={!listening && highlights.length === 0}
+              onPress={() => {
+                speechSynthesis.cancel();
+                setListening(false);
+                setHighlights([]);
+              }}
             >
               <Stop size="S" />
             </Button>
@@ -114,6 +120,8 @@ const DemoCore = () => {
             <SpokenHighlights
               listening={listening}
               setListening={setListening}
+              highlights={highlights}
+              setHighlights={setHighlights}
             />
             <RenderPDFDocumentLayer />
           </RelativePDFContainer>
@@ -129,14 +137,16 @@ const Demo = () => {
     return (
       <>
         <Text marginBottom="8px">
-          You must use Google Chrome to view the demo.
+          You must use Google Chrome to view the demo. Most of the code in the
+          library works with any browser, but the text recognition features hook
+          used here rely on features that are not yet standardized across all
+          browsers.
         </Text>
       </>
     );
   }
   return (
     <>
-      <Heading level={2}>Demo</Heading>
       <DemoIntroduction />
       <DemoCore />
     </>

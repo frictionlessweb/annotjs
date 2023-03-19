@@ -4,6 +4,7 @@ import { Heading, Text } from "@/components/Typography";
 import Highlight from "react-highlight";
 import "highlight.js/styles/dracula.css";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 
 const Demo = dynamic(() => import("./Demo"), {
   ssr: false,
@@ -60,11 +61,28 @@ const Documentation = () => {
           </Text>
         </li>
       </ul>
-      <Heading level={3}>Getting Started</Heading>
-      <Text>
-        To start using Annotjs, you will first need to install the Adobe Embed
-        API onto your webpage.
+      <Text marginBottom="8px">
+        In the code above, the <code>extractValues</code> prop is a JSON that
+        comes directly from the Adobe Extract API. In order to use this library,
+        you will need to feed your document to that API beforehand; our code
+        uses the metadata it returns in order to facilitate the rich
+        interactions demoed above.
       </Text>
+      <Flex direction="column" marginBottom="32px">
+        <Heading level={3}>Getting Started</Heading>
+        <Text marginBottom="8px">
+          To start using Annotjs, you will first need to install the Adobe Embed
+          API onto your webpage. To do that,{" "}
+          <Link href="https://developer.adobe.com/document-services/docs/overview/pdf-embed-api/">
+            visit this webpage and follow the instructions.
+          </Link>
+        </Text>
+        <Text>
+          After that, you will need to install <code>annotjs</code> as a
+          library. For the moment, contact the person who linked you this
+          webpage for guidance about the best way to do so.
+        </Text>
+      </Flex>
     </Flex>
   );
 };
@@ -86,6 +104,7 @@ const Home = () => {
         UNSAFE_style={{ maxWidth: "600px", scrollMarginTop: "50px" }}
         id="demo"
       >
+        <Heading level={2}>Demo</Heading>
         <Demo />
       </Flex>
       <Documentation />
