@@ -6,7 +6,9 @@ import "highlight.js/styles/dracula.css";
 import {
   ExtractDocumentProvider,
   RenderPDFDocumentLayer,
+  HighlightTextLayer,
   useDocument,
+  serializeBounds,
 } from "annotjs";
 import dynamic from "next/dynamic";
 import api from "./api.json";
@@ -116,32 +118,6 @@ const EXTRACT_DOCUMENT_VALUE = {
   extract: api,
 };
 
-const ExampleLayer = () => {
-  const {
-    currentPage,
-    documentContext: { characters, paragraphs, words },
-  } = useDocument();
-  return (
-    <>
-      {words
-        .filter((word) => word.page === currentPage)
-        .map((word) => {
-          return (
-            <div
-              key={word.id}
-              style={{
-                position: "absolute",
-                ...word.bounds,
-                backgroundColor: "red",
-                opacity: 0.3,
-              }}
-            />
-          );
-        })}
-    </>
-  );
-};
-
 const Home = () => {
   const [page, setPage] = React.useState(0);
   const value = React.useMemo(() => {
@@ -172,6 +148,7 @@ const Home = () => {
           <RelativePDFContainer
             style={{ border: "2px solid grey", marginTop: "16px" }}
           >
+            <HighlightTextLayer highlights={[]} />
             <RenderPDFDocumentLayer />
           </RelativePDFContainer>
         </ExtractDocumentProvider>
