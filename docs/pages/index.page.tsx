@@ -3,21 +3,12 @@ import { Flex } from "@adobe/react-spectrum";
 import { Heading, Text } from "@/components/Typography";
 import Highlight from "react-highlight";
 import "highlight.js/styles/dracula.css";
-import {
-  ExtractDocumentProvider,
-  RenderPDFDocumentLayer,
-  HighlightTextLayer,
-  useDocument,
-  serializeBounds,
-} from "annotjs";
 import dynamic from "next/dynamic";
-import api from "./api.json";
-const RelativePDFContainer = dynamic(() => import("./RelativePDFContainer"), {
-  ssr: false,
-  loading: () => <Text>Loading PDF...</Text>,
-});
 
-const CLIENT_ID: string = process.env.NEXT_PUBLIC_ADOBE_EMBED_API_KEY as string;
+const Demo = dynamic(() => import("./Demo"), {
+  ssr: false,
+  loading: () => <Text>Loading Demo...</Text>,
+});
 
 const HIGHLIGHTING_TEXT = `const HighlightText = ({ extractValues }) => {
   return (
@@ -29,24 +20,6 @@ const HIGHLIGHTING_TEXT = `const HighlightText = ({ extractValues }) => {
     </ExtractDocumentProvider>
   )
 }`.trim();
-
-const DemoIntroduction = () => {
-  return (
-    <>
-      <Text marginBottom="8px">
-        Below is a small application built with Annotjs that allows users to
-        select text in a PDF document and hear it read out loud back to them.
-        This library provides the functionality to make writing such code easy
-        with just a little bit of React! Feel free to play around with it.
-      </Text>
-      <Text>
-        When you are ready to learn more and start playing around with the
-        library yourself, see the API section for documentation about how
-        precisely to go about doing so.
-      </Text>
-    </>
-  );
-};
 
 const Documentation = () => {
   return (
@@ -77,16 +50,13 @@ const Documentation = () => {
             <b>Provider components</b> (like <code>PDFProvider</code> in the
             example above) render elements into the document and allow your code
             to access various React hooks that involve the content of the
-            document. Noteable providers include the <code>PDFProvider</code>{" "}
-            and the <code>AnnotationProvider</code> components.
+            document.
           </Text>
         </li>
         <li>
           <Text>
-            <b>Layer components</b> (like <code>HighlightLayer</code> in the
-            example above) add rich pieces of functionality onto the PDF above.
-            Notable layers include the <code>TextHighlightLayer</code> and the{" "}
-            <code>CreateAnnotationLayer</code>.
+            <b>Layer components</b> (like <code>HighlightTextLayer</code> in the
+            example above) add rich pieces of functionality onto the PDF.
           </Text>
         </li>
       </ul>
@@ -95,37 +65,11 @@ const Documentation = () => {
         To start using Annotjs, you will first need to install the Adobe Embed
         API onto your webpage.
       </Text>
-      <Text marginTop="8px" marginBottom="4px">
-        <span style={{ fontWeight: "bold" }}>WARNING: </span>This library is
-        currently a work in progress. We have used this technology in several
-        research applications and learned what sorts of API designs work well
-        and which ones do not; we are in the process of writing a package will
-        be suitable for general production use.
-      </Text>
-      <Text marginTop="8px" marginBottom="16px">
-        If you have feedback about the ideas outlined on this web page, please
-        let us know! Feedback about these designs is very, very welcome.
-      </Text>
     </Flex>
   );
 };
 
-const EXTRACT_DOCUMENT_VALUE = {
-  clientId: CLIENT_ID,
-  fileName: "AudioDemo.pdf",
-  url: "/AudioDemo.pdf",
-  currentPage: 1,
-  extract: api,
-};
-
 const Home = () => {
-  const [page, setPage] = React.useState(0);
-  const value = React.useMemo(() => {
-    return {
-      ...EXTRACT_DOCUMENT_VALUE,
-      currentPage: page,
-    };
-  }, [page]);
   return (
     <Flex direction="column">
       <Heading id="intro" level={1}>
@@ -142,16 +86,7 @@ const Home = () => {
         UNSAFE_style={{ maxWidth: "600px", scrollMarginTop: "50px" }}
         id="demo"
       >
-        <Heading level={2}>Demo</Heading>
-        {/* @ts-expect-error - We know the API is ok. */}
-        <ExtractDocumentProvider value={value}>
-          <RelativePDFContainer
-            style={{ border: "2px solid grey", marginTop: "16px" }}
-          >
-            <HighlightTextLayer highlights={[]} />
-            <RenderPDFDocumentLayer />
-          </RelativePDFContainer>
-        </ExtractDocumentProvider>
+        <Demo />
       </Flex>
       <Documentation />
     </Flex>
