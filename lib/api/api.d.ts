@@ -46,6 +46,7 @@ export interface Character {
 }
 
 export interface DocumentContext {
+  extract: ExtractResult;
   paragraphs: Paragraph[];
   words: Word[];
   characters: Character[];

@@ -9,3 +9,5 @@ export * from "./context/context.js";
 export * from './DrawLayer/pdflayer.js';
 export * from './HighlightLayer/highlight.js';
 export * from './useVoiceControls/voices.js';
+export * from './Boxes/createAnnotationLayer.js';
+export * from './Boxes/movableBox.js';

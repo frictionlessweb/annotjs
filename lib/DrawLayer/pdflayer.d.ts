@@ -18,4 +18,5 @@ export const PDF_DOCUMENT_DIV_ID = "__ANNOTJS_PDF_DIV__";
 export interface RelativePDFContainerProps {
   style?: React.CSSProperties;
   children: React.ReactNode;
+  divRef?: React.MutableRefObject<HTMLDivElement | null>;
 }

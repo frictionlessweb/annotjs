@@ -8,6 +8,7 @@ import {
   ExtractDocumentProvider,
   RenderPDFDocumentLayer,
   HighlightTextLayer,
+  CreateAnnotationLayer,
   RelativePDFContainer,
 } from "annotjs";
 import api from "./api.json";
@@ -74,6 +75,28 @@ const SpokenHighlights = (props: SpokenHighlightsProps) => {
   return <HighlightTextLayer highlights={highlights} />;
 };
 
+interface CreateAnnotationsProps {
+  divRef: React.MutableRefObject<HTMLDivElement | null>;
+}
+
+const CreateAnnotations = (props: CreateAnnotationsProps) => {
+  const { divRef } = props;
+  const {
+    documentContext: { pages, words },
+  } = useDocument();
+  const width = Math.max(...pages.map((page) => page.width));
+  const height = Math.max(...pages.map((page) => page.height));
+  return (
+    <CreateAnnotationLayer
+      pdfContainer={divRef as React.MutableRefObject<HTMLDivElement>}
+      tokens={words}
+      width={width}
+      height={height}
+      onCreateAnnotation={console.log}
+    />
+  );
+};
+
 const DemoCore = () => {
   const [listening, setListening] = React.useState(false);
   const [highlights, setHighlights] = React.useState<string[]>([]);
@@ -83,6 +106,7 @@ const DemoCore = () => {
       currentPage: 1,
     };
   }, []);
+  const divRef = React.useRef<HTMLDivElement | null>(null);
   return (
     <>
       <Flex direction="column">
@@ -115,6 +139,7 @@ const DemoCore = () => {
         {/* @ts-ignore */}
         <ExtractDocumentProvider value={value}>
           <RelativePDFContainer
+            divRef={divRef}
             style={{ border: "2px solid grey", marginTop: "16px" }}
           >
             <SpokenHighlights
@@ -123,6 +148,7 @@ const DemoCore = () => {
               highlights={highlights}
               setHighlights={setHighlights}
             />
+            <CreateAnnotations divRef={divRef} />
             <RenderPDFDocumentLayer />
           </RelativePDFContainer>
         </ExtractDocumentProvider>
