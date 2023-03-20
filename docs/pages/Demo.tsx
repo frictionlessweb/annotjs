@@ -106,28 +106,28 @@ const DemoCore = () => {
       <Flex direction="column">
         <Flex marginY="16px">
           <Flex marginEnd="16px">
-            <Button
-              onPress={() => {
+            <button
+              onClick={() => {
                 speechSynthesis.cancel();
                 setListening(true);
               }}
-              variant={listening ? "primary" : "secondary"}
+              disabled={listening}
             >
               <Text>Record</Text>
-            </Button>
+            </button>
           </Flex>
           <Flex>
-            <Button
-              variant="primary"
-              isDisabled={!listening && highlights.length === 0}
-              onPress={() => {
+            <button
+              // variant="primary"
+              disabled={!listening && highlights.length === 0}
+              onClick={() => {
                 speechSynthesis.cancel();
                 setListening(false);
                 setHighlights([]);
               }}
             >
               <Text>Stop</Text>
-            </Button>
+            </button>
           </Flex>
         </Flex>
         {/* @ts-ignore */}
