@@ -11,3 +11,4 @@ export * from './HighlightLayer/highlight.js';
 export * from './useVoiceControls/voices.js';
 export * from './Boxes/createAnnotationLayer.js';
 export * from './Boxes/movableBox.js';
+export * from './Annotations/annotations.js';

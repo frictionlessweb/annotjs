@@ -1,13 +1,16 @@
 import React from "react";
 import { Text } from "@/components/Typography";
-import { useDocument, useVoiceControls } from "annotjs";
+import { Bounds, useDocument, useVoiceControls } from "annotjs";
 import { Flex, Button } from "@adobe/react-spectrum";
 import {
   ExtractDocumentProvider,
   RenderPDFDocumentLayer,
-  HighlightTextLayer,
   CreateAnnotationLayer,
   RelativePDFContainer,
+  AnnotationProvider,
+  useAnnotationHandlers,
+  useAnnotations,
+  serializeBounds,
 } from "annotjs";
 import api from "./api.json";
 
@@ -25,9 +28,13 @@ const DemoIntroduction = () => {
   return (
     <>
       <Text marginBottom="8px">
-        Try clicking the microphone below and saying {`"read paragraph three"`}{" "}
-        to the computer. Doing so will highlight that paragraph in the document
-        and cause it to be spoken out loud.
+        Try clicking the microphone below and saying {`"next page"`} or{" "}
+        {`"previous page"`} to the computer. Doing so will let you navigate
+        through the document.
+      </Text>
+      <Text>
+        You can also highlight a portion of the document and click {`"play"`} in
+        order to hear that part of the document read out loud.
       </Text>
     </>
   );
@@ -36,49 +43,54 @@ const DemoIntroduction = () => {
 interface SpokenHighlightsProps {
   listening: boolean;
   setListening: React.Dispatch<React.SetStateAction<boolean>>;
-  highlights: string[];
-  setHighlights: React.Dispatch<React.SetStateAction<string[]>>;
+  page: number;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const VOICE_INDEX = 20;
 
 const SpokenHighlights = (props: SpokenHighlightsProps) => {
-  const { listening, setListening, highlights, setHighlights } = props;
+  const { listening, setListening, setPage } = props;
   const {
-    documentContext: { paragraphs },
+    documentContext: { pages, paragraphs },
   } = useDocument();
   useVoiceControls({
     listening,
     setListening,
     onMessage: (result: string) => {
-      const words = result.split(" ");
-      const number = Number.parseInt(words[words.length - 1], 10);
-      const parText = paragraphs[number - 1]?.text;
-      if (parText === undefined) return;
-      setHighlights([parText]);
-      const theMessage = new SpeechSynthesisUtterance();
-      theMessage.voice = window.speechSynthesis.getVoices()[VOICE_INDEX];
-      theMessage.rate = 0.85;
-      theMessage.text = parText;
-      theMessage.onend = () => {
-        setHighlights([]);
-      };
-      window.speechSynthesis.speak(theMessage);
+      switch (result) {
+        case "next page": {
+          setPage((prevPage) => {
+            return prevPage >= pages.length ? prevPage : prevPage + 1;
+          });
+          return;
+        }
+        case "previous page": {
+          setPage((prevPage) => {
+            return prevPage === 1 ? prevPage : prevPage - 1;
+          });
+          return;
+        }
+        default: {
+          console.log(result);
+          return;
+        }
+      }
     },
   });
   React.useEffect(() => {
     if (!listening) return;
-    setHighlights([]);
-  }, [listening, setHighlights]);
-  return <HighlightTextLayer highlights={highlights} />;
+  }, [listening]);
+  return <div />;
 };
 
 interface CreateAnnotationsProps {
   divRef: React.MutableRefObject<HTMLDivElement | null>;
+  onCreateAnnotation: (bounds: Bounds) => void | Promise<void>;
 }
 
 const CreateAnnotations = (props: CreateAnnotationsProps) => {
-  const { divRef } = props;
+  const { divRef, onCreateAnnotation } = props;
   const {
     documentContext: { words },
   } = useDocument();
@@ -86,21 +98,23 @@ const CreateAnnotations = (props: CreateAnnotationsProps) => {
     <CreateAnnotationLayer
       pdfContainer={divRef as React.MutableRefObject<HTMLDivElement>}
       tokens={words}
-      onCreateAnnotation={console.log}
+      onCreateAnnotation={onCreateAnnotation}
     />
   );
 };
 
 const DemoCore = () => {
   const [listening, setListening] = React.useState(false);
+  const [page, setPage] = React.useState(1);
   const [highlights, setHighlights] = React.useState<string[]>([]);
   const value = React.useMemo(() => {
     return {
       ...EXTRACT_DOCUMENT_VALUE,
-      currentPage: 1,
+      currentPage: page,
     };
-  }, []);
+  }, [page]);
   const divRef = React.useRef<HTMLDivElement | null>(null);
+  const { createAnnotation } = useAnnotationHandlers();
   return (
     <>
       <Flex direction="column">
@@ -113,10 +127,10 @@ const DemoCore = () => {
               }}
               disabled={listening}
             >
-              <Text>Record</Text>
+              <Text>Speak Command</Text>
             </button>
           </Flex>
-          <Flex>
+          <Flex marginEnd="16px">
             <button
               // variant="primary"
               disabled={!listening && highlights.length === 0}
@@ -129,6 +143,9 @@ const DemoCore = () => {
               <Text>Stop</Text>
             </button>
           </Flex>
+          <Flex>
+            <button disabled>Play</button>
+          </Flex>
         </Flex>
         {/* @ts-ignore */}
         <ExtractDocumentProvider value={value}>
@@ -139,10 +156,22 @@ const DemoCore = () => {
             <SpokenHighlights
               listening={listening}
               setListening={setListening}
-              highlights={highlights}
-              setHighlights={setHighlights}
+              page={page}
+              setPage={setPage}
             />
-            <CreateAnnotations divRef={divRef} />
+            <CreateAnnotations
+              divRef={divRef}
+              onCreateAnnotation={(bounds) => {
+                createAnnotation({
+                  id: serializeBounds(bounds),
+                  ...bounds,
+                  page,
+                  backgroundColor: "rgba(244, 244, 244, 0.5)",
+                  border: "1px solid grey",
+                  label: "",
+                });
+              }}
+            />
             <RenderPDFDocumentLayer />
           </RelativePDFContainer>
         </ExtractDocumentProvider>
@@ -166,10 +195,10 @@ const Demo = () => {
     );
   }
   return (
-    <>
+    <AnnotationProvider>
       <DemoIntroduction />
       <DemoCore />
-    </>
+    </AnnotationProvider>
   );
 };
 
