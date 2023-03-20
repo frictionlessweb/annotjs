@@ -30,9 +30,9 @@ const DemoIntroduction = () => {
   return (
     <>
       <Text marginBottom="8px">
-        Try clicking the microphone below and saying {`"next page"`} or{" "}
-        {`"previous page"`} to the computer. Doing so will let you navigate
-        through the document.
+        Try clicking the {`"Speak Command"`} button below and saying{" "}
+        {`"next page"`} or {`"previous page"`} to the computer. Doing so will
+        let you navigate through the document.
       </Text>
       <Text>
         You can also highlight a portion of the document and click {`"play"`} in
