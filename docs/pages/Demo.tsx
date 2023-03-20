@@ -82,16 +82,12 @@ interface CreateAnnotationsProps {
 const CreateAnnotations = (props: CreateAnnotationsProps) => {
   const { divRef } = props;
   const {
-    documentContext: { pages, words },
+    documentContext: { words },
   } = useDocument();
-  const width = Math.max(...pages.map((page) => page.width));
-  const height = Math.max(...pages.map((page) => page.height));
   return (
     <CreateAnnotationLayer
       pdfContainer={divRef as React.MutableRefObject<HTMLDivElement>}
       tokens={words}
-      width={width}
-      height={height}
       onCreateAnnotation={console.log}
     />
   );
