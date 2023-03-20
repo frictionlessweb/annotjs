@@ -13,7 +13,7 @@ export default function Document() {
       </Head>
       <body>
         <SSRProvider>
-          <Provider theme={defaultTheme}>
+          <Provider theme={defaultTheme} locale="en-US">
             <Main />
           </Provider>
         </SSRProvider>
