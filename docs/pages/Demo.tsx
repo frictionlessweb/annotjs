@@ -7,6 +7,8 @@ import {
   RenderPDFDocumentLayer,
   CreateAnnotationLayer,
   RelativePDFContainer,
+  areOverlapping,
+  HighlightTextLayer,
   AnnotationProvider,
   useAnnotationHandlers,
   useAnnotations,
@@ -43,6 +45,8 @@ const DemoIntroduction = () => {
 interface SpokenHighlightsProps {
   listening: boolean;
   setListening: React.Dispatch<React.SetStateAction<boolean>>;
+  setHighlights: React.Dispatch<React.SetStateAction<string[]>>;
+  setPlaying: React.Dispatch<React.SetStateAction<boolean>>;
   page: number;
   setPage: React.Dispatch<React.SetStateAction<number>>;
 }
@@ -50,9 +54,9 @@ interface SpokenHighlightsProps {
 const VOICE_INDEX = 20;
 
 const SpokenHighlights = (props: SpokenHighlightsProps) => {
-  const { listening, setListening, setPage } = props;
+  const { listening, setListening, setPage, setPlaying, setHighlights } = props;
   const {
-    documentContext: { pages, paragraphs },
+    documentContext: { pages },
   } = useDocument();
   useVoiceControls({
     listening,
@@ -63,12 +67,16 @@ const SpokenHighlights = (props: SpokenHighlightsProps) => {
           setPage((prevPage) => {
             return prevPage >= pages.length ? prevPage : prevPage + 1;
           });
+          setPlaying(false);
+          setHighlights([]);
           return;
         }
         case "previous page": {
           setPage((prevPage) => {
             return prevPage === 1 ? prevPage : prevPage - 1;
           });
+          setPlaying(false);
+          setHighlights([]);
           return;
         }
         default: {
@@ -81,24 +89,34 @@ const SpokenHighlights = (props: SpokenHighlightsProps) => {
   React.useEffect(() => {
     if (!listening) return;
   }, [listening]);
-  return <div />;
+  return null;
 };
 
 interface CreateAnnotationsProps {
   divRef: React.MutableRefObject<HTMLDivElement | null>;
-  onCreateAnnotation: (bounds: Bounds) => void | Promise<void>;
+  setHighlights: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const CreateAnnotations = (props: CreateAnnotationsProps) => {
-  const { divRef, onCreateAnnotation } = props;
+  const { divRef, setHighlights } = props;
   const {
-    documentContext: { words },
+    currentPage,
+    documentContext: { words, paragraphs },
   } = useDocument();
   return (
     <CreateAnnotationLayer
       pdfContainer={divRef as React.MutableRefObject<HTMLDivElement>}
       tokens={words}
-      onCreateAnnotation={onCreateAnnotation}
+      onCreateAnnotation={(bounds) => {
+        const pageParagraphs = paragraphs.filter(
+          (par) => par.page === currentPage - 1
+        );
+        const currentPar = pageParagraphs.find((paragraph) =>
+          areOverlapping(paragraph.bounds, bounds)
+        );
+        if (currentPar === undefined) return;
+        setHighlights([currentPar.text]);
+      }}
     />
   );
 };
@@ -106,7 +124,10 @@ const CreateAnnotations = (props: CreateAnnotationsProps) => {
 const DemoCore = () => {
   const [listening, setListening] = React.useState(false);
   const [page, setPage] = React.useState(1);
+
   const [highlights, setHighlights] = React.useState<string[]>([]);
+  const [playing, setPlaying] = React.useState(false);
+
   const value = React.useMemo(() => {
     return {
       ...EXTRACT_DOCUMENT_VALUE,
@@ -114,7 +135,6 @@ const DemoCore = () => {
     };
   }, [page]);
   const divRef = React.useRef<HTMLDivElement | null>(null);
-  const { createAnnotation } = useAnnotationHandlers();
   return (
     <>
       <Flex direction="column">
@@ -132,19 +152,46 @@ const DemoCore = () => {
           </Flex>
           <Flex marginEnd="16px">
             <button
-              // variant="primary"
-              disabled={!listening && highlights.length === 0}
               onClick={() => {
                 speechSynthesis.cancel();
                 setListening(false);
+              }}
+              disabled={!listening}
+            >
+              <Text>Cancel Command</Text>
+            </button>
+          </Flex>
+          <Flex marginEnd="16px">
+            <button
+              onClick={() => {
+                setPlaying(true);
+                const theMessage = new SpeechSynthesisUtterance();
+                theMessage.voice =
+                  window.speechSynthesis.getVoices()[VOICE_INDEX];
+                theMessage.rate = 0.85;
+                theMessage.text = highlights[0];
+                theMessage.onend = () => {
+                  setHighlights([]);
+                  setPlaying(false);
+                };
+                window.speechSynthesis.speak(theMessage);
+              }}
+              disabled={playing || highlights.length === 0}
+            >
+              Play
+            </button>
+          </Flex>
+          <Flex marginEnd="16px">
+            <button
+              disabled={highlights.length === 0 || !playing}
+              onClick={() => {
+                speechSynthesis.cancel();
                 setHighlights([]);
+                setPlaying(false);
               }}
             >
               <Text>Stop</Text>
             </button>
-          </Flex>
-          <Flex>
-            <button disabled>Play</button>
           </Flex>
         </Flex>
         {/* @ts-ignore */}
@@ -156,23 +203,14 @@ const DemoCore = () => {
             <SpokenHighlights
               listening={listening}
               setListening={setListening}
+              setHighlights={setHighlights}
+              setPlaying={setPlaying}
               page={page}
               setPage={setPage}
             />
-            <CreateAnnotations
-              divRef={divRef}
-              onCreateAnnotation={(bounds) => {
-                createAnnotation({
-                  id: serializeBounds(bounds),
-                  ...bounds,
-                  page,
-                  backgroundColor: "rgba(244, 244, 244, 0.5)",
-                  border: "1px solid grey",
-                  label: "",
-                });
-              }}
-            />
+            <CreateAnnotations divRef={divRef} setHighlights={setHighlights} />
             <RenderPDFDocumentLayer />
+            <HighlightTextLayer highlights={highlights} />
           </RelativePDFContainer>
         </ExtractDocumentProvider>
       </Flex>
@@ -195,10 +233,10 @@ const Demo = () => {
     );
   }
   return (
-    <AnnotationProvider>
+    <>
       <DemoIntroduction />
       <DemoCore />
-    </AnnotationProvider>
+    </>
   );
 };
 
