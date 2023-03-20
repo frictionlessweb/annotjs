@@ -1,9 +1,7 @@
 import React from "react";
-import { Heading, Text } from "@/components/Typography";
+import { Text } from "@/components/Typography";
 import { useDocument, useVoiceControls } from "annotjs";
 import { Flex, Button } from "@adobe/react-spectrum";
-import VoiceOver from "@spectrum-icons/workflow/VoiceOver";
-import Stop from "@spectrum-icons/workflow/Stop";
 import {
   ExtractDocumentProvider,
   RenderPDFDocumentLayer,
@@ -115,7 +113,7 @@ const DemoCore = () => {
               }}
               variant={listening ? "primary" : "secondary"}
             >
-              <VoiceOver size="S" />
+              <Text>Record</Text>
             </Button>
           </Flex>
           <Flex>
@@ -128,7 +126,7 @@ const DemoCore = () => {
                 setHighlights([]);
               }}
             >
-              <Stop size="S" />
+              <Text>Stop</Text>
             </Button>
           </Flex>
         </Flex>
