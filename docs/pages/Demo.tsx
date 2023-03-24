@@ -1,7 +1,7 @@
 import React from "react";
-import { Text } from "@/components/Typography";
-import { Bounds, useDocument, useVoiceControls } from "annotjs";
-import { Flex, Button } from "@adobe/react-spectrum";
+import { Text, Heading } from "@/components/Typography";
+import { useDocument, useVoiceControls } from "annotjs";
+import { Flex } from "@adobe/react-spectrum";
 import {
   ExtractDocumentProvider,
   RenderPDFDocumentLayer,
@@ -9,11 +9,9 @@ import {
   RelativePDFContainer,
   areOverlapping,
   HighlightTextLayer,
-  AnnotationProvider,
-  useAnnotationHandlers,
-  useAnnotations,
-  serializeBounds,
 } from "annotjs";
+import Highlight from "react-highlight";
+import "highlight.js/styles/dracula.css";
 import api from "./api.json";
 
 const CLIENT_ID: string = process.env.NEXT_PUBLIC_ADOBE_EMBED_API_KEY as string;
@@ -46,6 +44,7 @@ interface SpokenHighlightsProps {
   listening: boolean;
   setListening: React.Dispatch<React.SetStateAction<boolean>>;
   setHighlights: React.Dispatch<React.SetStateAction<string[]>>;
+  setLastCommand: React.Dispatch<React.SetStateAction<string>>;
   setPlaying: React.Dispatch<React.SetStateAction<boolean>>;
   page: number;
   setPage: React.Dispatch<React.SetStateAction<number>>;
@@ -54,9 +53,16 @@ interface SpokenHighlightsProps {
 const VOICE_INDEX = 20;
 
 const SpokenHighlights = (props: SpokenHighlightsProps) => {
-  const { listening, setListening, setPage, setPlaying, setHighlights } = props;
   const {
-    documentContext: { pages },
+    listening,
+    setListening,
+    setPage,
+    setPlaying,
+    setHighlights,
+    setLastCommand,
+  } = props;
+  const {
+    documentContext: { pages, textContent },
   } = useDocument();
   useVoiceControls({
     listening,
@@ -69,7 +75,7 @@ const SpokenHighlights = (props: SpokenHighlightsProps) => {
           });
           setPlaying(false);
           setHighlights([]);
-          return;
+          break;
         }
         case "previous page": {
           setPage((prevPage) => {
@@ -77,13 +83,19 @@ const SpokenHighlights = (props: SpokenHighlightsProps) => {
           });
           setPlaying(false);
           setHighlights([]);
-          return;
+          break;
         }
         default: {
-          console.log(result);
-          return;
+          break;
         }
       }
+      setLastCommand(
+        JSON.stringify(
+          { request_text: result, pdf_text: `${textContent.slice(0, 50)}...` },
+          null,
+          2
+        )
+      );
     },
   });
   React.useEffect(() => {
@@ -121,9 +133,40 @@ const CreateAnnotations = (props: CreateAnnotationsProps) => {
   );
 };
 
+interface ApiExampleProps {
+  lastCommand: string;
+}
+
+const ApiExample = (props: ApiExampleProps) => {
+  const { lastCommand } = props;
+  return (
+    <Flex direction="column">
+      <Heading marginY="16px" level={3}>
+        API Example
+      </Heading>
+      {lastCommand !== "" ? (
+        <>
+          <Text>
+            Your last command to the PDF could be sent to an API in the
+            following JSON:
+          </Text>
+          <Highlight className="jsx">{lastCommand}</Highlight>
+          <Text>
+            Note that the <code>pdf_text</code> has been abbreviated for
+            clarity.
+          </Text>
+        </>
+      ) : (
+        <Text>Try issuing a commnand to the PDF.</Text>
+      )}
+    </Flex>
+  );
+};
+
 const DemoCore = () => {
   const [listening, setListening] = React.useState(false);
   const [page, setPage] = React.useState(1);
+  const [lastCommand, setLastCommand] = React.useState("");
 
   const [highlights, setHighlights] = React.useState<string[]>([]);
   const [playing, setPlaying] = React.useState(false);
@@ -202,6 +245,7 @@ const DemoCore = () => {
           >
             <SpokenHighlights
               listening={listening}
+              setLastCommand={setLastCommand}
               setListening={setListening}
               setHighlights={setHighlights}
               setPlaying={setPlaying}
@@ -212,6 +256,7 @@ const DemoCore = () => {
             <RenderPDFDocumentLayer />
             <HighlightTextLayer highlights={highlights} />
           </RelativePDFContainer>
+          <ApiExample lastCommand={lastCommand} />
         </ExtractDocumentProvider>
       </Flex>
     </>
