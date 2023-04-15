@@ -16,6 +16,8 @@ export interface ExtractDocumentProviderContextValue {
   documentContext: DocumentContext;
   fileName: string;
   clientId: string;
+  width: number;
+  height: number;
   headers?: Array<any>;
 }
 
