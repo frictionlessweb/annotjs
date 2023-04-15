@@ -28,7 +28,7 @@ export const App = () => {
         <RenderPDFDocumentLayer />
       </RelativePDFContainer>
       <ChatMessages />
-      <Flex marginY="16px" width={width} justifyContent="space-evenly">
+      <Flex marginBottom="16px" width={width} justifyContent="space-evenly">
         <HomeButton />
         <RecordButton />
         <PlayButton />
