@@ -4,7 +4,7 @@ export * from "./math/math.js";
  * mapping code, as those mutate their inputs in surprising ways that
  * consumers of our library shouldn't need to worry about.
  */
-export { analyzeElements } from "./api/api.js";
+export { analyzeElements, ExtractResult } from "./api/api.js";
 export * from "./context/context.js";
 export * from './DrawLayer/pdflayer.js';
 export * from './HighlightLayer/highlight.js';

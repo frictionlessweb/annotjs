@@ -1,12 +1,13 @@
 {
   "scripts": {
-    "start": "npm run dev --prefix docs",
-    "build": "npm run build --prefix docs",
-    "test": "npm test --prefix lib && npm test --prefix docs",
+    "start": "npm run dev --prefix voicedemo",
+    "build": "npm run build --prefix voicedemo",
+    "test": "npm test --prefix lib && npm test --prefix voicedemo",
     "setup": "npm install"
   },
   "workspaces": [
     "docs",
-    "lib"
+    "lib",
+    "voicedemo"
   ]
 }
