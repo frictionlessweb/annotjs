@@ -22,4 +22,3 @@ else:
     os.system("pip-compile")
 
 os.system("pip install -r requirements-dev.txt")
-os.system("cp requirements.txt ..")
