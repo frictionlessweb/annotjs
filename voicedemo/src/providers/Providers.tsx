@@ -7,6 +7,7 @@ import {
 } from "annotjs";
 import { ChromeProvider } from "./ChromeProvider";
 import { StateProvider } from "./StateProvider";
+import { ChatRefProvider } from "./ChatRefProvider";
 import api from "../util/api.json";
 
 interface ProvidersProps {
@@ -25,11 +26,13 @@ export const Providers = (props: ProvidersProps) => {
   const { children } = props;
   return (
     <Provider theme={defaultTheme} UNSAFE_style={{ backgroundColor: "white" }}>
-      <StateProvider>
-        <ExtractDocumentProvider value={value}>
-          <ChromeProvider>{children}</ChromeProvider>
-        </ExtractDocumentProvider>
-      </StateProvider>
+      <ChatRefProvider>
+        <StateProvider>
+          <ExtractDocumentProvider value={value}>
+            <ChromeProvider>{children}</ChromeProvider>
+          </ExtractDocumentProvider>
+        </StateProvider>
+      </ChatRefProvider>
     </Provider>
   );
 };

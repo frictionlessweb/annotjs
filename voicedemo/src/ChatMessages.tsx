@@ -3,7 +3,8 @@ import { Flex, Text, Divider, ProgressCircle } from "@adobe/react-spectrum";
 import { useDocument } from "annotjs";
 import { CHAT_TEXT_COLOR, CHAT_USER_BACKGROUND_COLOR } from "./util/constants";
 import { grammarify } from "./util/grammarify";
-import { useSelector } from './providers/StateProvider';
+import { useSelector } from "./providers/StateProvider";
+import { useChatDivRef } from "./providers/ChatRefProvider";
 
 const clean: (str: string) => string = grammarify.clean;
 
@@ -60,17 +61,31 @@ const SystemMessage = (props: SystemMessageProps) => {
 };
 
 export const ChatMessages = () => {
-  const { messages, isLoading } = useSelector(state => state);
+  const divRef = useChatDivRef();
+  const { messages, isLoading } = useSelector((state) => state);
   const { width } = useDocument();
+  React.useEffect(
+    function scrollToBottomOfChatWindow() {
+      if (divRef.current === null) return;
+      divRef.current.scroll({
+        top: divRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    },
+    [messages, divRef]
+  );
   return (
-    <Flex
-      direction="column"
-      width={width}
-      alignItems="center"
-      marginY="32px"
-      UNSAFE_style={{
+    <div
+      ref={divRef}
+      style={{
+        display: "flex",
+        flexDirection: "column",
         backgroundColor: "rgb(248, 248, 248)",
-        height: "100px",
+        marginTop: "32px",
+        marginBottom: "32px",
+        alignItems: "center",
+        width,
+        height: "150px",
         overflowY: "scroll",
       }}
     >
@@ -79,13 +94,13 @@ export const ChatMessages = () => {
       </div>
       {messages.map((message) => {
         if (message.type === "user") {
-          return <UserMessage text={message.text} />;
+          return <UserMessage key={message.text} text={message.text} />;
         }
-        return <SystemMessage text={message.text} />;
+        return <SystemMessage key={message.text} text={message.text} />;
       })}
       {isLoading ? (
         <ProgressCircle marginY="16px" size="M" isIndeterminate />
       ) : null}
-    </Flex>
+    </div>
   );
 };
