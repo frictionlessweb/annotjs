@@ -1,3 +1,4 @@
+import React from "react";
 import { Flex, Text } from "@adobe/react-spectrum";
 import {
   RelativePDFContainer,
@@ -9,11 +10,20 @@ import {
 import { ChatMessages } from "./ChatMessages";
 import { HomeButton } from "./HomeButton";
 import { RecordButton } from "./RecordButton";
-0;
 import { PlayButton } from "./PlayButton";
+import { askChatGPT } from "./askChatGPT";
 
 export const App = () => {
   const { width } = useDocument();
+  React.useEffect(() => {
+    askChatGPT("test")
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   return (
     <Flex
       width={width}
@@ -27,7 +37,7 @@ export const App = () => {
         <BlockControlLayer />
         <RenderPDFDocumentLayer />
       </RelativePDFContainer>
-      <ChatMessages />
+      <ChatMessages isLoading messages={[]} />
       <Flex marginBottom="16px" width={width} justifyContent="space-evenly">
         <HomeButton />
         <RecordButton />

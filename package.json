@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "npm run dev --prefix voicedemo",
+    "start": "concurrently \"npm run dev --prefix voicedemo\" \"cd api && uvicorn --host 0.0.0.0 main:app --reload\"",
     "build": "npm run build --prefix voicedemo",
     "test": "npm test --prefix lib && npm test --prefix voicedemo",
     "setup": "npm install"

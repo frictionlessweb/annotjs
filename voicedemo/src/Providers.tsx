@@ -1,6 +1,11 @@
 import React from "react";
 import { Provider, defaultTheme } from "@adobe/react-spectrum";
-import { ExtractDocumentProvider, ExtractDocumentProviderContextInitializer, ExtractResult } from "annotjs";
+import {
+  ExtractDocumentProvider,
+  ExtractDocumentProviderContextInitializer,
+  ExtractResult,
+} from "annotjs";
+import { ChromeProvider } from "./ChromeProvider";
 import api from "./api.json";
 
 interface ProvidersProps {
@@ -20,7 +25,7 @@ export const Providers = (props: ProvidersProps) => {
   return (
     <Provider theme={defaultTheme} UNSAFE_style={{ backgroundColor: "white" }}>
       <ExtractDocumentProvider value={value}>
-        {children}
+        <ChromeProvider>{children}</ChromeProvider>
       </ExtractDocumentProvider>
     </Provider>
   );

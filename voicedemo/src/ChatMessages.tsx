@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, Text, Divider } from "@adobe/react-spectrum";
+import { Flex, Text, Divider, ProgressCircle } from "@adobe/react-spectrum";
 import { useDocument } from "annotjs";
 import { CHAT_TEXT_COLOR, CHAT_USER_BACKGROUND_COLOR } from "./constants";
 // @ts-ignore
@@ -59,7 +59,18 @@ const SystemMessage = (props: SystemMessageProps) => {
   );
 };
 
-export const ChatMessages = () => {
+interface Message {
+  type: "user" | "system";
+  text: string;
+}
+
+interface ChatMessagesProps {
+  messages: Message[];
+  isLoading: boolean;
+}
+
+export const ChatMessages = (props: ChatMessagesProps) => {
+  const { messages, isLoading } = props;
   const { width } = useDocument();
   return (
     <Flex
@@ -76,8 +87,15 @@ export const ChatMessages = () => {
       <div style={{ width: width / 3, marginTop: "8px", marginBottom: "8px" }}>
         <Divider UNSAFE_style={{ backgroundColor: "rgb(213, 213, 213)" }} />
       </div>
-      <UserMessage text="This is a request from a user." />
-      <SystemMessage text="This is the response from ChatGPT." />
+      {messages.map((message) => {
+        if (message.type === "user") {
+          return <UserMessage text={message.text} />;
+        }
+        return <SystemMessage text={message.text} />;
+      })}
+      {isLoading ? (
+        <ProgressCircle marginY="16px" size="M" isIndeterminate />
+      ) : null}
     </Flex>
   );
 };
