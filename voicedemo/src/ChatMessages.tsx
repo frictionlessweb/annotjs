@@ -1,9 +1,9 @@
 import React from "react";
 import { Flex, Text, Divider, ProgressCircle } from "@adobe/react-spectrum";
 import { useDocument } from "annotjs";
-import { CHAT_TEXT_COLOR, CHAT_USER_BACKGROUND_COLOR } from "./constants";
-// @ts-ignore
-import { grammarify } from "./grammarify";
+import { CHAT_TEXT_COLOR, CHAT_USER_BACKGROUND_COLOR } from "./util/constants";
+import { grammarify } from "./util/grammarify";
+import { useSelector } from './providers/StateProvider';
 
 const clean: (str: string) => string = grammarify.clean;
 
@@ -59,18 +59,8 @@ const SystemMessage = (props: SystemMessageProps) => {
   );
 };
 
-interface Message {
-  type: "user" | "system";
-  text: string;
-}
-
-interface ChatMessagesProps {
-  messages: Message[];
-  isLoading: boolean;
-}
-
-export const ChatMessages = (props: ChatMessagesProps) => {
-  const { messages, isLoading } = props;
+export const ChatMessages = () => {
+  const { messages, isLoading } = useSelector(state => state);
   const { width } = useDocument();
   return (
     <Flex

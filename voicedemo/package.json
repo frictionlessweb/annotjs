@@ -11,8 +11,14 @@
   },
   "dependencies": {
     "@adobe/react-spectrum": "^3.26.0",
+    "@redux-devtools/extension": "^3.2.5",
+    "@types/redux-logger": "^3.0.9",
+    "immer": "^9.0.21",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-redux": "^8.0.5",
+    "redux": "^4.2.1",
+    "redux-logger": "^3.0.6"
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",

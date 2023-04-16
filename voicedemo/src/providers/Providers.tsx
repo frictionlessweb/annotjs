@@ -6,7 +6,8 @@ import {
   ExtractResult,
 } from "annotjs";
 import { ChromeProvider } from "./ChromeProvider";
-import api from "./api.json";
+import { StateProvider } from "./StateProvider";
+import api from "../util/api.json";
 
 interface ProvidersProps {
   children: React.ReactNode;
@@ -24,9 +25,11 @@ export const Providers = (props: ProvidersProps) => {
   const { children } = props;
   return (
     <Provider theme={defaultTheme} UNSAFE_style={{ backgroundColor: "white" }}>
-      <ExtractDocumentProvider value={value}>
-        <ChromeProvider>{children}</ChromeProvider>
-      </ExtractDocumentProvider>
+      <StateProvider>
+        <ExtractDocumentProvider value={value}>
+          <ChromeProvider>{children}</ChromeProvider>
+        </ExtractDocumentProvider>
+      </StateProvider>
     </Provider>
   );
 };

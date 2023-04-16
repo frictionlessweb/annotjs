@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@adobe/react-spectrum";
 import Voice from "@spectrum-icons/workflow/VoiceOver";
-import { RESIZE_STYLE } from './constants';
+import { RESIZE_STYLE } from '../util/constants';
 
 export const RecordButton = () => {
   return (
