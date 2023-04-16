@@ -16,7 +16,7 @@ import { PlayButton } from "./buttons/PlayButton";
 export const App = () => {
   const { width } = useDocument();
   return (
-    <Flex>
+    <Flex height="100%" alignItems="end">
       <Flex
         width={width}
         direction="column"

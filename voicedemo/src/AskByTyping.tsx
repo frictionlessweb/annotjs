@@ -12,9 +12,11 @@ export const AskByTyping = () => {
       type: "ADD_MESSAGE",
       payload: { text: question, type: "user" },
     });
+    const res = await askChatGPT(question);
+    dispatch({ type: "ADD_MESSAGE", payload: { text: res, type: "system" } });
   }, [question, dispatch]);
   return (
-    <Flex marginTop="32px" direction="column">
+    <Flex direction="column" marginBottom="32px">
       <TextArea value={question} onChange={setQuestion} />
       <Flex marginY="8px" justifyContent="end">
         <Button onPress={sendQuestion} variant="primary">
