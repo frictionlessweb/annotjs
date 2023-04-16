@@ -1,6 +1,6 @@
 import React from "react";
 import { Flex, TextArea, Button } from "@adobe/react-spectrum";
-import Send from "@spectrum-icons/workflow/send";
+import Send from "@spectrum-icons/workflow/Send";
 import { useDispatch } from "./providers/StateProvider";
 import { askChatGPT } from "./util/askChatGPT";
 
