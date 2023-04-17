@@ -2,7 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,macos,direnv,python
 
 ### Custom ###
-# api/__pycache__/*
+*.pyc
 
 ### direnv ###
 .direnv
