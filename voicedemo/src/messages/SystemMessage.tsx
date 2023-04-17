@@ -5,7 +5,7 @@ import { AnswerWithQuestions } from "../util/askChatGPT";
 import { ReadSource } from "./ReadSource";
 import { Questions } from "./Questions";
 import { useDoc, useSetDoc } from "../providers/DocumentProvider";
-import { pageFromString, useDocument } from "annotjs";
+import { pageOfString, useDocument } from "annotjs";
 
 interface SystemMessageProps {
   text: string;
@@ -31,7 +31,7 @@ export const SystemMessage = (props: SystemMessageProps) => {
     try {
       const response: AnswerWithQuestions = JSON.parse(text);
       const theSource = response.answer.sources[0];
-      const page = pageFromString(theSource, characters);
+      const page = pageOfString(theSource, characters);
       if (page === -1) {
         return;
       }
