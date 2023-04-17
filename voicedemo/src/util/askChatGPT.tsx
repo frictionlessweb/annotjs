@@ -25,7 +25,12 @@ export const parseAnswer = (apiResponse: string): Answer => {
     type: "GOOD_ANSWER",
     payload: {
       response,
-      sources: sourcesSubstring.split(" - ").filter((x) => x !== ""),
+      sources: sourcesSubstring
+        .replaceAll("\n", "- ")
+        .replaceAll('"', "")
+        .split(" - ")
+        .map((x) => x.replaceAll("-", "").trim())
+        .filter((x) => x !== "" && x !== "-"),
     },
   };
 };

@@ -12,9 +12,11 @@ import { ChatMessages } from "./ChatMessages";
 import { HomeButton } from "./buttons/HomeButton";
 import { RecordButton } from "./buttons/RecordButton";
 import { PlayButton } from "./buttons/PlayButton";
+import { useDoc } from "./providers/DocumentProvider";
 
 export const App = () => {
   const { width } = useDocument();
+  const { highlights } = useDoc();
   return (
     <Flex height="100%" alignItems="end">
       <Flex
@@ -25,7 +27,7 @@ export const App = () => {
         UNSAFE_style={{ border: "1px solid black", paddingTop: "16px" }}
       >
         <RelativePDFContainer>
-          <HighlightTextLayer highlights={[]} />
+          <HighlightTextLayer highlights={highlights} />
           <BlockControlLayer />
           <RenderPDFDocumentLayer />
         </RelativePDFContainer>
