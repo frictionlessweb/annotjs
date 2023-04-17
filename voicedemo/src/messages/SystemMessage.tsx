@@ -1,6 +1,8 @@
 import React from "react";
 import { Flex, Text } from "@adobe/react-spectrum";
 import { CHAT_TEXT_COLOR } from "../util/constants";
+import { parseAnswer } from "../util/askChatGPT";
+import { ReadSource } from './ReadSource';
 
 interface SystemMessageProps {
   text: string;
@@ -8,6 +10,7 @@ interface SystemMessageProps {
 
 export const SystemMessage = (props: SystemMessageProps) => {
   const { text } = props;
+  const answer = parseAnswer(text);
   return (
     <Flex
       width="100%"
@@ -24,7 +27,14 @@ export const SystemMessage = (props: SystemMessageProps) => {
           filter: "drop-shadow(1px 1px 1px rgba(0,0,0,0.3))",
         }}
       >
-        <Text>{text}</Text>
+        {answer.type === "BAD_ANSWER" ? (
+          <Text>{answer.payload}</Text>
+        ) : (
+          <Flex direction="column">
+            <Text>{answer.payload.response}</Text>
+            <ReadSource sources={answer.payload.sources} />
+          </Flex>
+        )}
       </Flex>
     </Flex>
   );
