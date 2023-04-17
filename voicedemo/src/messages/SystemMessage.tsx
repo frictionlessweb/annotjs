@@ -5,6 +5,7 @@ import { AnswerWithQuestions } from "../util/askChatGPT";
 import { ReadSource } from "./ReadSource";
 import { Questions } from "./Questions";
 import { useDoc, useSetDoc } from "../providers/DocumentProvider";
+import { pageFromString, useDocument } from "annotjs";
 
 interface SystemMessageProps {
   text: string;
@@ -22,20 +23,34 @@ const STYLE = {
 export const SystemMessage = (props: SystemMessageProps) => {
   const { text } = props;
   const { currentPage } = useDoc();
+  const {
+    documentContext: { characters },
+  } = useDocument();
   const setDoc = useSetDoc();
   React.useEffect(() => {
     try {
       const response: AnswerWithQuestions = JSON.parse(text);
-      setDoc((prev) => {
-        return { ...prev, isPlaying: true };
-      });
+      const theSource = response.answer.sources[0];
+      const page = pageFromString(theSource, characters);
+      if (page === -1) {
+        return;
+      }
       const theMessage = new SpeechSynthesisUtterance();
       theMessage.rate = 0.85;
-      theMessage.text = response.answer.answer;
+      theMessage.text = theSource;
       speechSynthesis.speak(theMessage);
+      setDoc({
+        currentPage: page + 1,
+        highlights: [theSource],
+        isPlaying: true,
+      });
       theMessage.onend = () => {
         setDoc((prev) => {
-          return { ...prev, isPlaying: false };
+          return {
+            ...prev,
+            highlights: [],
+            isPlaying: false,
+          };
         });
       };
     } catch (err) {
