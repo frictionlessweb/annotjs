@@ -13,13 +13,24 @@ You answer questions in the following way:
 1. You provide a succinct overall answer that is easy to listen to. Provide this under a title ANSWER.
 
 2. For each sentence in your answer, you provide exactly one sentence in the document that
-is most relevant to the answer. Provide these sentences as a list titled SOURCES. Rank this list in order of most to least important. Don't include any sentences that aren't in the document.
+is most relevant to the answer. Provide these sentences as a list titled SOURCES. Rank this list in order of most to least important. Don't include any sentences that aren't in the document!
 
-Make sure ANSWER and SOURCES are correctly labelled so they can be parsed.
-""",
+Since we're going to parse the output of your response, always format your answer like this:
+
+ANSWER: <answer to the question>
+SOURCES:
+ - <source one>
+ - <source two>
+
+Example:
+What was CCB's return on equity in 2022?
+ANSWER: CCB's return on equity in 2022 was 29%, generating a net income of $14.9 billion.
+SOURCES:
+ - In 2022, CCB delivered a 29% return on equity (ROE) on net income of $14.9 billion.
+""".strip(),
             },
             {
-                "role": "assistant",
+                "role": "user",
                 "content": f"""The document that you are reading is below:
 Title: Consumer & Community Banking 
 Content: Consumer &  Community Banking 
@@ -90,7 +101,7 @@ Marianne Lake
 Co-CEO, Consumer & Community Banking 
 Jennifer Piepszak 
 Co-CEO, Consumer & Community Banking
-                """,
+                """.strip(),
             },
             {
                 "role": "user",
