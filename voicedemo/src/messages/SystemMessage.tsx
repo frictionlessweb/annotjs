@@ -4,6 +4,7 @@ import { CHAT_TEXT_COLOR } from "../util/constants";
 import { AnswerWithQuestions } from "../util/askChatGPT";
 import { ReadSource } from "./ReadSource";
 import { Questions } from "./Questions";
+import { useDoc, useSetDoc } from "../providers/DocumentProvider";
 
 interface SystemMessageProps {
   text: string;
@@ -20,6 +21,27 @@ const STYLE = {
 
 export const SystemMessage = (props: SystemMessageProps) => {
   const { text } = props;
+  const { currentPage } = useDoc();
+  const setDoc = useSetDoc();
+  React.useEffect(() => {
+    try {
+      const response: AnswerWithQuestions = JSON.parse(text);
+      setDoc((prev) => {
+        return { ...prev, isPlaying: true };
+      });
+      const theMessage = new SpeechSynthesisUtterance();
+      theMessage.rate = 0.85;
+      theMessage.text = response.answer.answer;
+      speechSynthesis.speak(theMessage);
+      theMessage.onend = () => {
+        setDoc((prev) => {
+          return { ...prev, isPlaying: false };
+        });
+      };
+    } catch (err) {
+      console.error(err);
+    }
+  }, [text, currentPage]);
   try {
     const response: AnswerWithQuestions = JSON.parse(text);
     return (
