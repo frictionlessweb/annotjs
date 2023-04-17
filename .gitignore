@@ -1,6 +1,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/node,macos,direnv,python
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,macos,direnv,python
 
+### Custom ###
+# api/__pycache__/*
+
 ### direnv ###
 .direnv
 .envrc
