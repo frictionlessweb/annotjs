@@ -3,21 +3,29 @@ from analyzer.aisingleton import openai
 
 def analyze_user_request(request: str) -> str:
     res = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4",
         messages=[
             {
                 "role": "system",
-                "content": """You are a powerful voice assistant helping a distracted user understand a document while driving.
-You answer questions in the following way: 
+                "content": """
+You are a powerful document assistant who answers questions about a document and provides sources from the document that support the answer. You can ONLY output valid JSON.
 
-1. You provide a succinct overall answer that is easy to listen to. Provide this under a title ANSWER.
+Your output should be a typescript object of the type `AnswerWithQuestions`:
 
-2. For each sentence in your answer, you provide exactly one sentence in the document that
-is most relevant to the answer. Provide these sentences as a list titled SOURCES. Rank this list in order of most to least important. Don't include any sentences that aren't in the document!
+```
+type Answer = {
+  sources: string[];
+  answer: string;
+}
 
-3. Last, based on the user's question, you provide the user one suggestion of the most relevant follow-up topic in the text. Provide this under a title SUGGESTION. Provide your recommendation as a question using the following format: Would you like me to tell you about {topic recommendation}.
+type AnswerWithQuestions = {
+  answer: Answer;
+  questions: string[];
+}
+```
 
-Make sure ANSWER, SOURCES, and SUGGESTION are correctly labelled so they can be parsed.""",
+The `answer` field contains a natural language answer, and the `sources` field contains a list of snippets copied from the document that supports the answer. The text in the `sources` field MUST come from the document. The snippets should be short, no more than 1 sentence each. The list of `sources` should be ranked by order of importance. The `questions` field contains suggested follow-up questions the user may want to ask. You must output only the `AnswerWithQuestions` object, with no other text.
+""".strip(),
             },
             {
                 "role": "user",
