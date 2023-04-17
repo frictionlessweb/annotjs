@@ -19,8 +19,10 @@ export const ReadSource = (props: ReadSourceProps) => {
         onClick={() => {
           const theSource = sources[0];
           const page = pageOfString(theSource, characters);
+          if (page === -1) {
+            return;
+          }
           const theMessage = new SpeechSynthesisUtterance();
-          theMessage.voice = window.speechSynthesis.getVoices()[20];
           theMessage.rate = 0.85;
           theMessage.text = theSource;
           speechSynthesis.speak(theMessage);
