@@ -21,9 +21,7 @@ export const Providers = (props: ProvidersProps) => {
       <DocumentProvider>
         <ChatRefProvider>
           <StateProvider>
-            <ExtractProvider>
-              <ChromeProvider>{children}</ChromeProvider>
-            </ExtractProvider>
+            <ExtractProvider>{children}</ExtractProvider>
           </StateProvider>
         </ChatRefProvider>
       </DocumentProvider>
