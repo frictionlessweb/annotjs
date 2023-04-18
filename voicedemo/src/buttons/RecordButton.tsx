@@ -5,8 +5,10 @@ import { RESIZE_STYLE } from "../util/constants";
 import { askChatGPT } from "../util/askChatGPT";
 import { useDispatch } from "../providers/StateProvider";
 import { useVoiceControls } from "annotjs";
+import { useReadMessage } from "../util/readMessageOutLoud";
 
 export const RecordButton = () => {
+  const readMessage = useReadMessage();
   const [listening, setListening] = React.useState(false);
   const dispatch = useDispatch();
   useVoiceControls({
@@ -19,6 +21,11 @@ export const RecordButton = () => {
       });
       const res = await askChatGPT(message);
       dispatch({ type: "ADD_MESSAGE", payload: { text: res, type: "system" } });
+      try {
+        readMessage(res);
+      } catch (err) {
+        console.error(err);
+      }
     },
   });
   return (

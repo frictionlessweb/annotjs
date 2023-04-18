@@ -2,6 +2,7 @@ import React from "react";
 import { Flex, Text, Button } from "@adobe/react-spectrum";
 import { useDispatch } from "../providers/StateProvider";
 import { askChatGPT } from "../util/askChatGPT";
+import { useReadMessage } from "../util/readMessageOutLoud";
 
 interface QuestionProps {
   questions: string[];
@@ -10,6 +11,7 @@ interface QuestionProps {
 export const Questions = (props: QuestionProps) => {
   const { questions } = props;
   const dispatch = useDispatch();
+  const readMessage = useReadMessage();
   return (
     <Flex direction="column">
       {questions.map((question) => {
@@ -25,6 +27,11 @@ export const Questions = (props: QuestionProps) => {
                 type: "ADD_MESSAGE",
                 payload: { type: "system", text: res },
               });
+              try {
+                readMessage(res);
+              } catch (err) {
+                console.error(err);
+              }
             }}
             style={{
               width: "100%",

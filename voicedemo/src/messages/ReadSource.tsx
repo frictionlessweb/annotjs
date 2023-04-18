@@ -1,45 +1,19 @@
 import React from "react";
 import { Flex } from "@adobe/react-spectrum";
-import { useSetDoc } from "../providers/DocumentProvider";
-import { pageOfString, useDocument } from "annotjs";
+import { useReadMessage } from "../util/readMessageOutLoud";
 
 interface ReadSourceProps {
-  sources: string[];
+  messageText: string;
 }
 
 export const ReadSource = (props: ReadSourceProps) => {
-  const { sources } = props;
-  const setDoc = useSetDoc();
-  const {
-    documentContext: { characters },
-  } = useDocument();
+  const { messageText } = props;
+  const readMessage = useReadMessage();
   return (
     <Flex direction="column" width="100%" alignItems="end">
       <p
         onClick={() => {
-          const theSource = sources[0];
-          const page = pageOfString(theSource, characters);
-          if (page === -1) {
-            return;
-          }
-          const theMessage = new SpeechSynthesisUtterance();
-          theMessage.rate = 0.85;
-          theMessage.text = theSource;
-          speechSynthesis.speak(theMessage);
-          setDoc({
-            currentPage: page + 1,
-            highlights: [theSource],
-            isPlaying: true,
-          });
-          theMessage.onend = () => {
-            setDoc((prev) => {
-              return {
-                ...prev,
-                highlights: [],
-                isPlaying: false,
-              };
-            });
-          };
+          readMessage(messageText);
         }}
         style={{
           cursor: "pointer",
