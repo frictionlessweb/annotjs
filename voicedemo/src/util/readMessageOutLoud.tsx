@@ -9,26 +9,27 @@ export const useReadMessage = () => {
   const setDoc = useSetDoc();
   const readMessage = (message: string) => {
     const res: AnswerWithQuestions = JSON.parse(message);
-    const {
-      answer: { answer, sources },
-    } = res;
-    const theSource = sources[sources.length - 1];
-    const page = pageOfString(theSource, characters);
+    let answer = res.answer.answer;
+    const theSource = res.answer.sources.find((source) => {
+      return pageOfString(source, characters) !== -1;
+    });
+    const page = pageOfString(theSource || res.answer.sources[0], characters);
     if (page === -1) {
-      console.log('page of -1 in production')
-      return;
+      answer = `I couldn't find that information in the document. Here's what I know: ${answer}`;
     }
     const theMessage = new SpeechSynthesisUtterance();
     theMessage.rate = 0.85;
     theMessage.text = answer;
-    console.log('about to try speaking...');
+    console.log("about to try speaking...");
     // @ts-expect-error - very bad, trying to debug
     window.theMessage = theMessage;
     speechSynthesis.speak(theMessage);
-    setDoc({
-      currentPage: page + 1,
-      highlights: [theSource],
-      isPlaying: true,
+    setDoc((prev) => {
+      return {
+        currentPage: page !== -1 ? page + 1 : prev.currentPage,
+        highlights: theSource !== undefined ? [theSource] : [],
+        isPlaying: true,
+      };
     });
     theMessage.onend = () => {
       setDoc((prev) => {
