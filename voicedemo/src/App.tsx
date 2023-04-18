@@ -18,14 +18,18 @@ import { useDoc } from "./providers/DocumentProvider";
 export const App = () => {
   const { width } = useDocument();
   const { highlights } = useDoc();
+  const logoWidth = 250;
   return (
     <Flex height="100%" direction="column" alignItems="center">
       <Flex>
-        <Flex direction="column" justifyContent="center">
-          <Heading level={1} marginBottom={0}>
-            SNAP
-          </Heading>
-          <Heading level={3}>SNippets for Audio PDFs</Heading>
+        <Flex direction="column" justifyContent="center" alignItems="center" height="100%">
+          <img
+            style={{ marginTop: '16px' }}
+            width={`${logoWidth}px`}
+            height={`${logoWidth / 3}px`}
+            src="/logo.png"
+            alt="SNAP"
+          />
         </Flex>
         <Flex width="500px" marginStart="32px">
           <Text marginTop="32px">
