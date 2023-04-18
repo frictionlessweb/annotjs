@@ -1,5 +1,5 @@
 import React from "react";
-import { Divider, ProgressCircle } from "@adobe/react-spectrum";
+import { Flex, ProgressCircle } from "@adobe/react-spectrum";
 import { useDocument } from "annotjs";
 import { useSelector } from "./providers/StateProvider";
 import { useChatDivRef } from "./providers/ChatRefProvider";
@@ -29,10 +29,11 @@ export const ChatMessages = () => {
         backgroundColor: "rgb(248, 248, 248)",
         marginTop: "32px",
         alignItems: "center",
-        paddingTop: '8px',
-        width,
+        paddingTop: "8px",
+        width: width,
         height: "100%",
         overflowY: "scroll",
+        overflowX: 'hidden',
       }}
     >
       {messages.map((message) => {
@@ -42,7 +43,9 @@ export const ChatMessages = () => {
         return <SystemMessage key={message.text} text={message.text} />;
       })}
       {isLoading ? (
-        <ProgressCircle marginY="16px" size="M" isIndeterminate />
+        <Flex width="70%">
+          <ProgressCircle marginY="16px" size="M" isIndeterminate />
+        </Flex>
       ) : null}
     </div>
   );

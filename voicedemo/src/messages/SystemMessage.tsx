@@ -26,7 +26,7 @@ export const SystemMessage = (props: SystemMessageProps) => {
       <Flex
         width="100%"
         justifyContent="end"
-        UNSAFE_style={{ paddingLeft: "32px", marginBottom: "16px" }}
+        UNSAFE_style={{ paddingLeft: "32px", marginBottom: "16px", marginRight: '64px' }}
       >
         <Flex UNSAFE_style={STYLE}>
           <Flex direction="column">
