@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex } from "@adobe/react-spectrum";
+import { Button, Flex } from "@adobe/react-spectrum";
 import {
   RelativePDFContainer,
   RenderPDFDocumentLayer,
@@ -12,6 +12,7 @@ import { ChatMessages } from "./ChatMessages";
 import { HomeButton } from "./buttons/HomeButton";
 import { RecordButton } from "./buttons/RecordButton";
 import { PlayButton } from "./buttons/PlayButton";
+import { PageButtons } from './buttons/PageButtons';
 import { useDoc } from "./providers/DocumentProvider";
 
 export const App = () => {
@@ -19,6 +20,7 @@ export const App = () => {
   const { highlights } = useDoc();
   return (
     <Flex height="100%">
+      <PageButtons />
       <Flex
         width={width}
         direction="column"
