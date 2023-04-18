@@ -15,11 +15,15 @@ export const useReadMessage = () => {
     const theSource = sources[sources.length - 1];
     const page = pageOfString(theSource, characters);
     if (page === -1) {
+      console.log('page of -1 in production')
       return;
     }
     const theMessage = new SpeechSynthesisUtterance();
     theMessage.rate = 0.85;
     theMessage.text = answer;
+    console.log('about to try speaking...');
+    // @ts-expect-error - very bad, trying to debug
+    window.theMessage = theMessage;
     speechSynthesis.speak(theMessage);
     setDoc({
       currentPage: page + 1,
