@@ -3,8 +3,8 @@ import { Divider, ProgressCircle } from "@adobe/react-spectrum";
 import { useDocument } from "annotjs";
 import { useSelector } from "./providers/StateProvider";
 import { useChatDivRef } from "./providers/ChatRefProvider";
-import { UserMessage } from './messages/UserMessage';
-import { SystemMessage } from './messages/SystemMessage';
+import { UserMessage } from "./messages/UserMessage";
+import { SystemMessage } from "./messages/SystemMessage";
 
 export const ChatMessages = () => {
   const divRef = useChatDivRef();
@@ -28,16 +28,13 @@ export const ChatMessages = () => {
         flexDirection: "column",
         backgroundColor: "rgb(248, 248, 248)",
         marginTop: "32px",
-        marginBottom: "32px",
         alignItems: "center",
+        paddingTop: '8px',
         width,
-        height: "150px",
+        height: "100%",
         overflowY: "scroll",
       }}
     >
-      <div style={{ width: width / 3, marginTop: "8px", marginBottom: "8px" }}>
-        <Divider UNSAFE_style={{ backgroundColor: "rgb(213, 213, 213)" }} />
-      </div>
       {messages.map((message) => {
         if (message.type === "user") {
           return <UserMessage key={message.text} text={message.text} />;

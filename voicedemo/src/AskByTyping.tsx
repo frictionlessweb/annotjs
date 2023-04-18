@@ -16,12 +16,23 @@ export const AskByTyping = () => {
     dispatch({ type: "ADD_MESSAGE", payload: { text: res, type: "system" } });
   }, [question, dispatch]);
   return (
-    <Flex direction="column" marginBottom="32px">
-      <TextArea value={question} onChange={setQuestion} />
-      <Flex marginY="8px" justifyContent="end">
-        <Button onPress={sendQuestion} variant="primary">
-          <Send />
-        </Button>
+    <Flex direction="column" marginBottom="32px" width="100%">
+      <Flex alignItems="start" UNSAFE_style={{ border: "1px solid grey" }}>
+        <TextArea
+          value={question}
+          onChange={setQuestion}
+          UNSAFE_style={{ width: "100%" }}
+          UNSAFE_className="custom-textarea"
+        />
+        <Flex marginX="8px" height="100%" alignItems="center">
+          <Button
+            isDisabled={question === ""}
+            onPress={sendQuestion}
+            variant="primary"
+          >
+            <Send />
+          </Button>
+        </Flex>
       </Flex>
     </Flex>
   );

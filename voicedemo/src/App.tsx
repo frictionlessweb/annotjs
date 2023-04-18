@@ -18,7 +18,7 @@ export const App = () => {
   const { width } = useDocument();
   const { highlights } = useDoc();
   return (
-    <Flex height="100%" alignItems="end">
+    <Flex height="100%">
       <Flex
         width={width}
         direction="column"
@@ -31,15 +31,16 @@ export const App = () => {
           <BlockControlLayer />
           <RenderPDFDocumentLayer />
         </RelativePDFContainer>
-
+      </Flex>
+      <Flex direction="column" height="100vh">
         <ChatMessages />
+        <AskByTyping />
         <Flex marginBottom="16px" width={width} justifyContent="space-evenly">
           <HomeButton />
           <RecordButton />
           <PlayButton />
         </Flex>
       </Flex>
-      <AskByTyping />
     </Flex>
   );
 };
