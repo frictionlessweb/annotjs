@@ -14,6 +14,7 @@ import { RecordButton } from "./buttons/RecordButton";
 import { PlayButton } from "./buttons/PlayButton";
 import { PageButtons } from "./buttons/PageButtons";
 import { useDoc } from "./providers/DocumentProvider";
+import logo from '../public/logo.png';
 
 export const App = () => {
   const { width } = useDocument();
@@ -27,7 +28,7 @@ export const App = () => {
             style={{ marginTop: '16px' }}
             width={`${logoWidth}px`}
             height={`${logoWidth / 3}px`}
-            src="/logo.png"
+            src={logo}
             alt="SNAP"
           />
         </Flex>
