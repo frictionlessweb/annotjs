@@ -13,7 +13,11 @@ interface ProvidersProps {
 export const Providers = (props: ProvidersProps) => {
   const { children } = props;
   return (
-    <Provider theme={defaultTheme} UNSAFE_style={{ backgroundColor: "white" }}>
+    <Provider
+      theme={defaultTheme}
+      colorScheme="light"
+      UNSAFE_style={{ backgroundColor: "white" }}
+    >
       <DocumentProvider>
         <ChatRefProvider>
           <StateProvider>
