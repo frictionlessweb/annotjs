@@ -9,5 +9,8 @@
     "docs",
     "lib",
     "voicedemo"
-  ]
+  ],
+  "dependencies": {
+    "vite-plugin-pwa": "^0.14.7"
+  }
 }
