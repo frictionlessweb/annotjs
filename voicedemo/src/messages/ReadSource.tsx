@@ -8,7 +8,7 @@ interface ReadSourceProps {
 
 export const ReadSource = (props: ReadSourceProps) => {
   const { messageText } = props;
-  const readMessage = useReadMessage();
+  const readMessage = useReadMessage("the_source");
   return (
     <Flex direction="column" width="100%" alignItems="end">
       <p
