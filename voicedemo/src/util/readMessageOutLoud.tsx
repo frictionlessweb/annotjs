@@ -17,7 +17,6 @@ export const useReadMessage = (config: SpeechConfig = "the_answer") => {
       return;
     }
     const res = response.payload;
-    console.log(res);
     let answer = res.answer.answer;
     const theSource = res.answer.sources.find((source) => {
       return pageOfString(source, characters) !== -1;
@@ -30,7 +29,6 @@ export const useReadMessage = (config: SpeechConfig = "the_answer") => {
     }
     if (res.annotations.length > 0) {
       await apis.manager.addAnnotations(res.annotations);
-      console.log("got here");
       // @ts-expect-error - At runtime, the object has an ID.
       await apis.manager.selectAnnotation(res.annotations[0].id);
     }
