@@ -23,12 +23,13 @@ export const Questions = (props: QuestionProps) => {
                 payload: { type: "user", text: question },
               });
               const res = await askChatGPT(question);
+              const stringified = JSON.stringify(res);
               dispatch({
                 type: "ADD_MESSAGE",
-                payload: { type: "system", text: res },
+                payload: { type: "system", text: stringified },
               });
               try {
-                readMessage(res);
+                readMessage(stringified);
               } catch (err) {
                 console.error(err);
               }
@@ -41,8 +42,8 @@ export const Questions = (props: QuestionProps) => {
               cursor: "pointer",
               filter: "drop-shadow(1px 1px 1px rgba(0,0,0,0.3))",
               paddingLeft: "4px",
-              paddingTop: '8px',
-              paddingBottom: '8px',
+              paddingTop: "8px",
+              paddingBottom: "8px",
             }}
             key={question}
           >

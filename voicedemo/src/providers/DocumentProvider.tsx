@@ -1,9 +1,7 @@
 import React from "react";
-import type { Dispatch } from "react";
 
 interface DocumentProvider {
   currentPage: number;
-  highlights: string[];
   isPlaying: boolean;
 }
 
@@ -41,7 +39,6 @@ export const DocumentProvider = (props: DocumentProviderProps) => {
   const { children } = props;
   const [state, setState] = React.useState<DocumentProvider>({
     currentPage: 1,
-    highlights: [],
     isPlaying: false,
   });
   return (

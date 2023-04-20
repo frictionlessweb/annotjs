@@ -1,16 +1,23 @@
 import { useSetDoc } from "../providers/DocumentProvider";
 import { useDocument, pageOfString } from "annotjs";
-import { AnswerWithQuestions } from "./askChatGPT";
+import { usePDF } from "../providers/PDFContext";
+import { ApiResponse } from "./askChatGPT";
 
 type SpeechConfig = "the_answer" | "the_source";
 
-export const useReadMessage = (config: SpeechConfig = 'the_answer') => {
+export const useReadMessage = (config: SpeechConfig = "the_answer") => {
+  const { apis } = usePDF();
   const {
     documentContext: { characters },
   } = useDocument();
   const setDoc = useSetDoc();
-  const readMessage = (message: string) => {
-    const res: AnswerWithQuestions = JSON.parse(message);
+  const readMessage = async (message: string) => {
+    const response: ApiResponse = JSON.parse(message);
+    if (response.type === "BAD_RESPONSE") {
+      return;
+    }
+    const res = response.payload;
+    console.log(res);
     let answer = res.answer.answer;
     const theSource = res.answer.sources.find((source) => {
       return pageOfString(source, characters) !== -1;
@@ -18,8 +25,14 @@ export const useReadMessage = (config: SpeechConfig = 'the_answer') => {
     const page = pageOfString(theSource || res.answer.sources[0], characters);
     if (page === -1) {
       answer = `I couldn't find that information in the document. Here's what I know: ${answer}`;
-    } else if (config === 'the_source' && theSource !== undefined) {
+    } else if (config === "the_source" && theSource !== undefined) {
       answer = theSource;
+    }
+    if (res.annotations.length > 0) {
+      await apis.manager.addAnnotations(res.annotations);
+      console.log("got here");
+      // @ts-expect-error - At runtime, the object has an ID.
+      await apis.manager.selectAnnotation(res.annotations[0].id);
     }
     const theMessage = new SpeechSynthesisUtterance();
     theMessage.rate = 0.85;
@@ -28,15 +41,16 @@ export const useReadMessage = (config: SpeechConfig = 'the_answer') => {
     setDoc((prev) => {
       return {
         currentPage: page !== -1 ? page + 1 : prev.currentPage,
-        highlights: theSource !== undefined ? [theSource] : [],
         isPlaying: true,
       };
     });
-    theMessage.onend = () => {
+    theMessage.onend = async () => {
+      if (res.annotations.length > 0) {
+        await apis.manager.removeAnnotationsFromPDF();
+      }
       setDoc((prev) => {
         return {
           ...prev,
-          highlights: [],
           isPlaying: false,
         };
       });

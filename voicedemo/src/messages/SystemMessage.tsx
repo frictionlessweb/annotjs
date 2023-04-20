@@ -1,7 +1,7 @@
 import React from "react";
 import { Flex, Text } from "@adobe/react-spectrum";
 import { CHAT_TEXT_COLOR } from "../util/constants";
-import { AnswerWithQuestions } from "../util/askChatGPT";
+import { ApiResponse } from "../util/askChatGPT";
 import { ReadSource } from "./ReadSource";
 import { Questions } from "./Questions";
 
@@ -22,7 +22,14 @@ const STYLE = {
 export const SystemMessage = (props: SystemMessageProps) => {
   const { text } = props;
   try {
-    const response: AnswerWithQuestions = JSON.parse(text);
+    const response: ApiResponse = JSON.parse(text);
+    if (response.type === "BAD_RESPONSE") {
+      throw new Error("BAD RESPONSE");
+    }
+    const {
+      questions,
+      answer: { answer },
+    } = response.payload;
     return (
       <Flex
         width="100%"
@@ -34,8 +41,8 @@ export const SystemMessage = (props: SystemMessageProps) => {
       >
         <Flex UNSAFE_style={STYLE}>
           <Flex direction="column">
-            <Text marginBottom="8px">{response.answer.answer}</Text>
-            <Questions questions={response.questions} />
+            <Text marginBottom="8px">{answer}</Text>
+            <Questions questions={questions} />
             <ReadSource messageText={text} />
           </Flex>
         </Flex>

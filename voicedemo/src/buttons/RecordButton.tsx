@@ -20,9 +20,10 @@ export const RecordButton = () => {
         payload: { type: "user", text: message },
       });
       const res = await askChatGPT(message);
-      dispatch({ type: "ADD_MESSAGE", payload: { text: res, type: "system" } });
+      const text = JSON.stringify(res);
+      dispatch({ type: "ADD_MESSAGE", payload: { text, type: "system" } });
       try {
-        readMessage(res);
+        readMessage(text);
       } catch (err) {
         console.error(err);
       }

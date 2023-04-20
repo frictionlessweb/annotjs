@@ -1,4 +1,5 @@
 import React from "react";
+import { useDoc } from './DocumentProvider';
 
 interface PDFHandlers {
   apis: any;
@@ -73,13 +74,13 @@ const DEFAULT_VIEW_CONFIG = {
 export const PDFViewer = (props: PdfViewerProps) => {
   const { url } = props;
   const viewerRef = React.useRef(null);
-  const { setApis, apis } = usePDF();
+  const { setApis } = usePDF();
   React.useEffect(() => {
     const viewDocument = async () => {
       if (!viewerRef.current) return;
       if (!window.AdobeDC) return;
       const view = new window.AdobeDC.View({
-        clientId: "899d52477b7d4b589f808242e8d36cc3",
+        clientId: process.env.VITE_PUBLIC_ADOBE_EMBED_API_KEY,
         divId: "adobe-dc-view",
       });
       const config = {
@@ -106,7 +107,7 @@ export const PDFViewer = (props: PdfViewerProps) => {
     <div
       ref={viewerRef}
       id="adobe-dc-view"
-      style={{ width: "100%", height: "100%", position: 'absolute', zIndex: 1 }}
+      style={{ width: "100%", height: "100%", position: "absolute", zIndex: 1 }}
     />
   );
 };

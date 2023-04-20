@@ -2,3 +2,5 @@ fastapi
 uvicorn[standard]
 openai
 openai
+fuzzywuzzy
+numpy

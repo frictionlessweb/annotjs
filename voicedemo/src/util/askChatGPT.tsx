@@ -1,14 +1,19 @@
 type Answer = {
   sources: string[];
   answer: string;
-}
+};
 
 export type AnswerWithQuestions = {
   answer: Answer;
   questions: string[];
-}
+  annotations: object[];
+};
 
-export const askChatGPT = async (question: string): Promise<string> => {
+export type ApiResponse =
+  | { type: "BAD_RESPONSE" }
+  | { type: "GOOD_RESPONSE"; payload: AnswerWithQuestions };
+
+export const askChatGPT = async (question: string): Promise<ApiResponse> => {
   const res = await window.fetch("/api/v1/chat-response", {
     method: "POST",
     body: JSON.stringify({
@@ -19,5 +24,5 @@ export const askChatGPT = async (question: string): Promise<string> => {
     },
   });
   const theJson = await res.json();
-  return theJson.response;
+  return theJson;
 };

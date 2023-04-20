@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from analyzer.chatgpt import analyze_user_request
+from analyzer.extract import attach_annotations_to_response
+import json
 
 
 class UserRequest(BaseModel):
@@ -18,4 +20,9 @@ def read_root():
 @app.post("/chat-response")
 def chat_response(req: UserRequest):
     response = analyze_user_request(req.request)
-    return {"response": response}
+    try:
+        a_map = json.loads(response)
+        attach_annotations_to_response(a_map)
+        return {"type": "GOOD_RESPONSE", "payload": a_map}
+    except Exception:
+        return {"type": "BAD_RESPONSE"}
