@@ -95,14 +95,20 @@ export const PDFViewer = (props: PdfViewerProps) => {
         },
       };
       const preview = await view.previewFile(config, DEFAULT_VIEW_CONFIG);
+      console.log('preview ran');
       // For mysterious reasons, if you don't call this function, the Embed API
       // won't actually return the new annotation object to you.
       const manager = await preview.getAnnotationManager();
+      console.log('got annotation manager');
       await manager.setConfig({ showCommentsPanel: false });
+      console.log('ran set config');
+      // @ts-expect-error - We're attaching this in a dirty way.
+      window.manager = manager;
+      console.log('attached manager to window');
       setApis({ manager });
     };
     viewDocument();
-  }, [url, setApis]);
+  }, [url, setApis, window.AdobeDC, viewerRef.current]);
   return (
     <div
       ref={viewerRef}

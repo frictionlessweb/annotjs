@@ -8,7 +8,6 @@ import { ChatMessages } from "./ChatMessages";
 import Draggable from "react-draggable";
 
 const voices = window.speechSynthesis.getVoices();
-console.error(voices);
 
 export const App = () => {
   const [y, setY] = React.useState(window.screen.availHeight * 0.5);

@@ -31,11 +31,14 @@ export const useReadMessage = (config: SpeechConfig = "the_answer") => {
     theMessage.rate = 0.85;
     theMessage.text = answer;
     speechSynthesis.speak(theMessage);
+    // @ts-expect-error - We've attached it to the window object.
+    const manager = apis.manager || window.manager;
+    console.log('manager is ', manager);
     if (res.annotations.length > 0) {
       try {
-        await apis.manager.addAnnotations(res.annotations);
+        await manager.addAnnotations(res.annotations);
         // @ts-expect-error - At runtime, the object has an ID.
-        await apis.manager.selectAnnotation(res.annotations[0].id);
+        await manager.selectAnnotation(res.annotations[0].id);
       } catch (err) {
         console.error(err);
       }
@@ -49,7 +52,7 @@ export const useReadMessage = (config: SpeechConfig = "the_answer") => {
     theMessage.onend = async () => {
       if (res.annotations.length > 0) {
         try {
-          await apis.manager.removeAnnotationsFromPDF();
+          await manager.removeAnnotationsFromPDF();
         } catch (err) {
           console.error(err);
         }
