@@ -1,4 +1,5 @@
 import React from "react";
+import { Fade } from "react-awesome-reveal";
 import { Flex, ProgressCircle } from "@adobe/react-spectrum";
 import { useDocument } from "annotjs";
 import { useSelector } from "./providers/StateProvider";
@@ -8,45 +9,35 @@ import { SystemMessage } from "./messages/SystemMessage";
 
 export const ChatMessages = () => {
   const divRef = useChatDivRef();
-  const { messages, isLoading } = useSelector((state) => state);
-  const { width } = useDocument();
-  React.useEffect(
-    function scrollToBottomOfChatWindow() {
-      if (divRef.current === null) return;
-      divRef.current.scroll({
-        top: divRef.current.scrollHeight,
-        behavior: "smooth",
-      });
-    },
-    [messages, divRef]
-  );
+  const { messages, isLoading } = useSelector((state) => {
+    return {
+      isLoading: state.isLoading,
+      messages: [...state.messages].reverse(),
+    };
+  });
   return (
     <div
       ref={divRef}
       style={{
-        display: "flex",
-        flexDirection: "column",
-        backgroundColor: "rgb(248, 248, 248)",
-        marginTop: "32px",
-        alignItems: "center",
-        paddingTop: "8px",
-        width: width,
-        height: "100%",
+        width: "80%",
+        height: `300px`,
+        zIndex: 6,
         overflowY: "scroll",
-        overflowX: 'hidden',
       }}
     >
-      {messages.map((message) => {
-        if (message.type === "user") {
-          return <UserMessage key={message.text} text={message.text} />;
-        }
-        return <SystemMessage key={message.text} text={message.text} />;
-      })}
-      {isLoading ? (
-        <Flex width="70%">
-          <ProgressCircle marginY="16px" size="M" isIndeterminate />
-        </Flex>
-      ) : null}
+      <Fade>
+        {isLoading ? (
+          <Flex width="100%" justifyContent="center">
+            <ProgressCircle marginY="16px" size="L" isIndeterminate />
+          </Flex>
+        ) : null}
+        {messages.map((message) => {
+          if (message.type === "user") {
+            return <UserMessage key={message.text} text={message.text} />;
+          }
+          return <SystemMessage key={message.text} text={message.text} />;
+        })}
+      </Fade>
     </div>
   );
 };

@@ -40,7 +40,9 @@ export const Questions = (props: QuestionProps) => {
               color: "black",
               cursor: "pointer",
               filter: "drop-shadow(1px 1px 1px rgba(0,0,0,0.3))",
-              padding: "8px",
+              paddingLeft: "4px",
+              paddingTop: '8px',
+              paddingBottom: '8px',
             }}
             key={question}
           >

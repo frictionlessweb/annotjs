@@ -13,6 +13,7 @@ const config = {
     }),
   ],
   server: {
+    host: true,
     proxy: {
       "/api/v1": {
         target: "http://0.0.0.0:8000",

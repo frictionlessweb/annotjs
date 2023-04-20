@@ -11,10 +11,11 @@ interface SystemMessageProps {
 
 const STYLE = {
   padding: "16px",
-  backgroundColor: "white",
-  width: "40%",
+  backgroundColor: "rgb(237, 251, 234)",
+  width: "30%",
   borderRadius: "3px",
   color: CHAT_TEXT_COLOR,
+  marginRight: "48px",
   filter: "drop-shadow(1px 1px 1px rgba(0,0,0,0.3))",
 };
 
@@ -26,7 +27,10 @@ export const SystemMessage = (props: SystemMessageProps) => {
       <Flex
         width="100%"
         justifyContent="end"
-        UNSAFE_style={{ paddingLeft: "32px", marginBottom: "16px", marginRight: '64px' }}
+        UNSAFE_style={{
+          marginBottom: "16px",
+          marginRight: "64px",
+        }}
       >
         <Flex UNSAFE_style={STYLE}>
           <Flex direction="column">
