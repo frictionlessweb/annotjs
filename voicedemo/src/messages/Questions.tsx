@@ -17,7 +17,7 @@ export const Questions = (props: QuestionProps) => {
       {questions.map((question) => {
         return (
           <div
-            onClick={async () => {
+            onPointerDown={async () => {
               dispatch({
                 type: "ADD_MESSAGE",
                 payload: { type: "user", text: question },

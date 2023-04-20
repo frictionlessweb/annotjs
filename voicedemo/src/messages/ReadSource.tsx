@@ -12,7 +12,7 @@ export const ReadSource = (props: ReadSourceProps) => {
   return (
     <Flex direction="column" width="100%" alignItems="end">
       <p
-        onClick={() => {
+        onPointerDown={() => {
           readMessage(messageText);
         }}
         style={{
