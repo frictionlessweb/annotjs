@@ -52,6 +52,10 @@ export const App = () => {
                 width="300px"
               />
             </Flex>
+            <Flex marginTop="32px" width="100%" justifyContent="space-around">
+              <RecordButton />
+              <PlayButton />
+            </Flex>
             <Flex
               marginY="32px"
               height="100%"
@@ -64,22 +68,6 @@ export const App = () => {
           </Flex>
         </div>
       </Draggable>
-      <Flex
-        UNSAFE_style={{
-          width: "100vw",
-          marginTop: "90vh",
-          height: "10vh",
-          zIndex: 6,
-          backgroundColor: "lightblue",
-          justifyContent: "center",
-        }}
-      >
-        <Flex marginTop="16px" justifyContent="space-evenly" width="100%">
-          <HomeButton />
-          <RecordButton />
-          <PlayButton />
-        </Flex>
-      </Flex>
     </Flex>
   );
 };
