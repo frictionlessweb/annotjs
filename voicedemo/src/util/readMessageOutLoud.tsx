@@ -27,15 +27,19 @@ export const useReadMessage = (config: SpeechConfig = "the_answer") => {
     } else if (config === "the_source" && theSource !== undefined) {
       answer = theSource;
     }
-    if (res.annotations.length > 0) {
-      await apis.manager.addAnnotations(res.annotations);
-      // @ts-expect-error - At runtime, the object has an ID.
-      await apis.manager.selectAnnotation(res.annotations[0].id);
-    }
     const theMessage = new SpeechSynthesisUtterance();
     theMessage.rate = 0.85;
     theMessage.text = answer;
     speechSynthesis.speak(theMessage);
+    if (res.annotations.length > 0) {
+      try {
+        await apis.manager.addAnnotations(res.annotations);
+        // @ts-expect-error - At runtime, the object has an ID.
+        await apis.manager.selectAnnotation(res.annotations[0].id);
+      } catch (err) {
+        console.error(err);
+      }
+    }
     setDoc((prev) => {
       return {
         currentPage: page !== -1 ? page + 1 : prev.currentPage,
@@ -44,7 +48,11 @@ export const useReadMessage = (config: SpeechConfig = "the_answer") => {
     });
     theMessage.onend = async () => {
       if (res.annotations.length > 0) {
-        await apis.manager.removeAnnotationsFromPDF();
+        try {
+          await apis.manager.removeAnnotationsFromPDF();
+        } catch (err) {
+          console.error(err);
+        }
       }
       setDoc((prev) => {
         return {
