@@ -16,10 +16,11 @@ export const UserMessage = (props: UserMessageProps) => {
       UNSAFE_style={{
         padding: "16px",
         backgroundColor: CHAT_USER_BACKGROUND_COLOR,
-        width: "40%",
         borderRadius: "3px",
         color: CHAT_TEXT_COLOR,
-        marginLeft: '32px',
+        marginLeft: "16px",
+        marginRight: "16px",
+        marginBottom: "16px",
         filter: "drop-shadow(1px 1px 1px rgba(0,0,0,0.3))",
       }}
     >

@@ -30,7 +30,7 @@ export const App = () => {
         >
           <Flex
             direction="column"
-            marginY="32px"
+            marginY="16px"
             height="100%"
             width="100%"
             UNSAFE_style={{

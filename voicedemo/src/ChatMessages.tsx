@@ -1,7 +1,6 @@
 import React from "react";
 import { Fade } from "react-awesome-reveal";
 import { Flex, ProgressCircle } from "@adobe/react-spectrum";
-import { useDocument } from "annotjs";
 import { useSelector } from "./providers/StateProvider";
 import { useChatDivRef } from "./providers/ChatRefProvider";
 import { UserMessage } from "./messages/UserMessage";
@@ -19,8 +18,7 @@ export const ChatMessages = () => {
     <div
       ref={divRef}
       style={{
-        width: "80%",
-        height: `300px`,
+        width: "100%",
         zIndex: 6,
         overflowY: "scroll",
       }}
@@ -28,7 +26,7 @@ export const ChatMessages = () => {
       <Fade>
         {isLoading ? (
           <Flex width="100%" justifyContent="center">
-            <ProgressCircle marginY="16px" size="L" isIndeterminate />
+            <ProgressCircle marginBottom="16px" size="L" isIndeterminate />
           </Flex>
         ) : null}
         {messages.map((message) => {

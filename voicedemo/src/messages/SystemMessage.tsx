@@ -10,12 +10,16 @@ interface SystemMessageProps {
 }
 
 const STYLE = {
+  display: "flex",
+  justifyContent: "center",
   padding: "16px",
   backgroundColor: "rgb(237, 251, 234)",
-  width: "30%",
+  width: "100%",
   borderRadius: "3px",
   color: CHAT_TEXT_COLOR,
-  marginRight: "48px",
+  marginLeft: '16px',
+  marginRight: '16px',
+  marginBottom: '16px',
   filter: "drop-shadow(1px 1px 1px rgba(0,0,0,0.3))",
 };
 
@@ -31,16 +35,9 @@ export const SystemMessage = (props: SystemMessageProps) => {
       answer: { answer },
     } = response.payload;
     return (
-      <Flex
-        width="100%"
-        justifyContent="end"
-        UNSAFE_style={{
-          marginBottom: "16px",
-          marginRight: "64px",
-        }}
-      >
+      <Flex width="100%" justifyContent="center">
         <Flex UNSAFE_style={STYLE}>
-          <Flex direction="column">
+          <Flex direction="column" width="100%">
             <Text marginBottom="8px">{answer}</Text>
             <Questions questions={questions} />
             <ReadSource messageText={text} />
