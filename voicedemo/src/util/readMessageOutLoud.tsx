@@ -1,9 +1,22 @@
 import { useSetDoc } from "../providers/DocumentProvider";
+import { useSelector } from "../providers/StateProvider";
 import { useDocument, pageOfString } from "annotjs";
 import { usePDF } from "../providers/PDFContext";
 import { ApiResponse } from "./askChatGPT";
+import html from "../providers/html.json";
 
 type SpeechConfig = "the_answer" | "the_source";
+
+const highlightSource = (pdfString: string, theSource: string): string => {
+  console.log(pdfString);
+  console.log(pdfString.indexOf('In 2022,'));
+  const res = pdfString.replaceAll(
+    theSource,
+    `<span style="background-color: yellow;">${theSource}</span>`
+  );
+  console.log(res === pdfString);
+  return res;
+};
 
 export const useReadMessage = (config: SpeechConfig = "the_answer") => {
   const { apis } = usePDF();
@@ -11,6 +24,7 @@ export const useReadMessage = (config: SpeechConfig = "the_answer") => {
     documentContext: { characters },
   } = useDocument();
   const setDoc = useSetDoc();
+  const isPDF = useSelector((state) => state.isPDF);
   const readMessage = async (message: string) => {
     const response: ApiResponse = JSON.parse(message);
     if (response.type === "BAD_RESPONSE") {
@@ -32,29 +46,48 @@ export const useReadMessage = (config: SpeechConfig = "the_answer") => {
     theMessage.text = answer;
     speechSynthesis.speak(theMessage);
     // @ts-expect-error - We've attached it to the window object.
-    const manager = apis.manager || window.manager;
-    console.log('manager is ', manager);
+    const manager = apis?.manager || window.manager;
+    const shouldUseAnnotationApi = isPDF && Boolean(manager);
     if (res.annotations.length > 0) {
-      try {
-        await manager.addAnnotations(res.annotations);
-        // @ts-expect-error - At runtime, the object has an ID.
-        await manager.selectAnnotation(res.annotations[0].id);
-      } catch (err) {
-        console.error(err);
+      if (shouldUseAnnotationApi) {
+        try {
+          await manager.addAnnotations(res.annotations);
+          // @ts-expect-error - At runtime, the object has an ID.
+          await manager.selectAnnotation(res.annotations[0].id);
+        } catch (err) {
+          console.error(err);
+        }
+      } else if (page !== -1) {
+        setDoc((prev) => {
+          return {
+            ...prev,
+            pdfString: highlightSource(prev.pdfString, theSource!),
+          };
+        });
       }
     }
     setDoc((prev) => {
       return {
+        ...prev,
         currentPage: page !== -1 ? page + 1 : prev.currentPage,
         isPlaying: true,
       };
     });
     theMessage.onend = async () => {
       if (res.annotations.length > 0) {
-        try {
-          await manager.removeAnnotationsFromPDF();
-        } catch (err) {
-          console.error(err);
+        if (shouldUseAnnotationApi) {
+          try {
+            await manager.removeAnnotationsFromPDF();
+          } catch (err) {
+            console.error(err);
+          }
+        } else if (page !== -1) {
+          setDoc((prev) => {
+            return {
+              ...prev,
+              pdfString: html.html,
+            };
+          });
         }
       }
       setDoc((prev) => {
