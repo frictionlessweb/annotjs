@@ -1,7 +1,7 @@
 import React from "react";
 import { Flex, Divider } from "@adobe/react-spectrum";
 import { PDFViewer } from "./providers/PDFContext";
-import { HomeButton } from "./buttons/HomeButton";
+import { ToggleButton } from "./buttons/ToggleButton";
 import { RecordButton } from "./buttons/RecordButton";
 import { PlayButton } from "./buttons/PlayButton";
 import { ChatMessages } from "./ChatMessages";
@@ -56,6 +56,7 @@ export const App = () => {
             </Flex>
             <Flex marginTop="32px" width="100%" justifyContent="space-around">
               <RecordButton />
+              <ToggleButton />
               <PlayButton />
             </Flex>
             <Flex

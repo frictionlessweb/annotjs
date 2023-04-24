@@ -1,5 +1,6 @@
 import React from "react";
-import { useDoc } from './DocumentProvider';
+import { useSelector } from "./StateProvider";
+import { ReactView } from './ReactView';
 
 interface PDFHandlers {
   apis: any;
@@ -63,7 +64,7 @@ interface PdfViewerProps {
 }
 
 const DEFAULT_VIEW_CONFIG = {
-  embedMode: "FULL_WINDOW",
+  embedMode: "LIGHT_BOX",
   showDownloadPDF: false,
   showFullScreen: false,
   showPrintPDF: false,
@@ -75,6 +76,7 @@ export const PDFViewer = (props: PdfViewerProps) => {
   const { url } = props;
   const viewerRef = React.useRef(null);
   const { setApis } = usePDF();
+  const isPDF = useSelector((state) => state.isPDF);
   React.useEffect(() => {
     const viewDocument = async () => {
       if (!viewerRef.current) return;
@@ -95,20 +97,19 @@ export const PDFViewer = (props: PdfViewerProps) => {
         },
       };
       const preview = await view.previewFile(config, DEFAULT_VIEW_CONFIG);
-      console.log('preview ran');
       // For mysterious reasons, if you don't call this function, the Embed API
       // won't actually return the new annotation object to you.
       const manager = await preview.getAnnotationManager();
-      console.log('got annotation manager');
       await manager.setConfig({ showCommentsPanel: false });
-      console.log('ran set config');
       // @ts-expect-error - We're attaching this in a dirty way.
       window.manager = manager;
-      console.log('attached manager to window');
       setApis({ manager });
     };
     viewDocument();
   }, [url, setApis, window.AdobeDC, viewerRef.current]);
+  if (!isPDF) {
+    return <ReactView />
+  }
   return (
     <div
       ref={viewerRef}

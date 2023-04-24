@@ -3,6 +3,7 @@ import { Flex, Text, Button } from "@adobe/react-spectrum";
 import { useDispatch } from "../providers/StateProvider";
 import { askChatGPT } from "../util/askChatGPT";
 import { useReadMessage } from "../util/readMessageOutLoud";
+import { useSelector } from "../providers/StateProvider";
 
 interface QuestionProps {
   questions: string[];
@@ -11,6 +12,7 @@ interface QuestionProps {
 export const Questions = (props: QuestionProps) => {
   const { questions } = props;
   const dispatch = useDispatch();
+  const isLoading = useSelector((state) => state.isLoading);
   const readMessage = useReadMessage();
   return (
     <Flex direction="column">
@@ -18,6 +20,7 @@ export const Questions = (props: QuestionProps) => {
         return (
           <div
             onPointerDown={async () => {
+              if (isLoading) return;
               dispatch({
                 type: "ADD_MESSAGE",
                 payload: { type: "user", text: question },

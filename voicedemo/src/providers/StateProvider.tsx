@@ -18,16 +18,19 @@ export interface Message {
 type Action =
   | { type: "ADD_MESSAGE"; payload: Message }
   | { type: "START_LOADING" }
-  | { type: "STOP_LOADING" };
+  | { type: "STOP_LOADING" }
+  | { type: 'TOGGLE_PDF' };
 
 interface AppState {
   isLoading: boolean;
+  isPDF: boolean;
   messages: Message[];
 }
 
 export const DEFAULT_APP_STATE: AppState = {
   isLoading: false,
   messages: [],
+  isPDF: true,
 };
 
 export const reduce = (
@@ -39,6 +42,11 @@ export const reduce = (
     case "START_LOADING": {
       return produce(prev, (draft) => {
         draft.isLoading = true;
+      });
+    }
+    case 'TOGGLE_PDF': {
+      return produce(prev, (draft) => {
+        draft.isPDF = !draft.isPDF;
       });
     }
     case "STOP_LOADING": {
