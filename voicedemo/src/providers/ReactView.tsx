@@ -1,11 +1,13 @@
 import React from "react";
 import { Flex, Heading } from "@adobe/react-spectrum";
-import html from "./html.json";
-
-const __html = html.html;
+import { useDoc } from "./DocumentProvider";
 
 export const ReactView = () => {
+  const { pdfString } = useDoc();
   return (
-    <div style={{ overflowY: "scroll" }} dangerouslySetInnerHTML={{ __html }} />
+    <div
+      style={{ overflowY: "scroll" }}
+      dangerouslySetInnerHTML={{ __html: pdfString }}
+    />
   );
 };
