@@ -1,12 +1,12 @@
 import React from "react";
 import { Flex, Text } from "@adobe/react-spectrum";
 import { CHAT_TEXT_COLOR } from "../util/constants";
-import { ApiResponse } from "../util/askChatGPT";
 import { ReadSource } from "./ReadSource";
 import { Questions } from "./Questions";
+import { SystemResponse } from "../providers/StateProvider";
 
 interface SystemMessageProps {
-  text: string;
+  message: SystemResponse;
 }
 
 const STYLE = {
@@ -17,35 +17,16 @@ const STYLE = {
   width: "100%",
   borderRadius: "3px",
   color: CHAT_TEXT_COLOR,
-  marginLeft: '16px',
-  marginRight: '16px',
-  marginBottom: '16px',
+  marginLeft: "16px",
+  marginRight: "16px",
+  marginBottom: "16px",
   filter: "drop-shadow(1px 1px 1px rgba(0,0,0,0.3))",
 };
 
 export const SystemMessage = (props: SystemMessageProps) => {
-  const { text } = props;
-  try {
-    const response: ApiResponse = JSON.parse(text);
-    if (response.type === "BAD_RESPONSE") {
-      throw new Error("BAD RESPONSE");
-    }
-    const {
-      questions,
-      answer: { answer },
-    } = response.payload;
-    return (
-      <Flex width="100%" justifyContent="center">
-        <Flex UNSAFE_style={STYLE}>
-          <Flex direction="column" width="100%">
-            <Text marginBottom="8px">{answer}</Text>
-            <Questions questions={questions} />
-            <ReadSource messageText={text} />
-          </Flex>
-        </Flex>
-      </Flex>
-    );
-  } catch (err) {
+  const { message } = props;
+  const { payload: response } = message;
+  if (response.type === "BAD_RESPONSE") {
     return (
       <Flex
         width="100%"
@@ -58,4 +39,19 @@ export const SystemMessage = (props: SystemMessageProps) => {
       </Flex>
     );
   }
+  const {
+    questions,
+    answer: { answer },
+  } = response.payload;
+  return (
+    <Flex width="100%" justifyContent="center">
+      <Flex UNSAFE_style={STYLE}>
+        <Flex direction="column" width="100%">
+          <Text marginBottom="8px">{answer}</Text>
+          <Questions questions={questions} />
+          <ReadSource message={message} />
+        </Flex>
+      </Flex>
+    </Flex>
+  );
 };

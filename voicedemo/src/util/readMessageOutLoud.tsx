@@ -21,8 +21,7 @@ export const useReadMessage = (config: SpeechConfig = "the_answer") => {
   const setDoc = useSetDoc();
   const isPDF = useSelector((state) => state.isPDF);
   const dispatch = useDispatch();
-  const readMessage = async (message: string) => {
-    const response: ApiResponse = JSON.parse(message);
+  const readMessage = async (response: ApiResponse) => {
     if (response.type === "BAD_RESPONSE") {
       return;
     }

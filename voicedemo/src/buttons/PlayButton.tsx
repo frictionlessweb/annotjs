@@ -17,8 +17,12 @@ export const PlayButton = () => {
   return (
     <Button
       onPress={() => {
-        if (!isPlaying && latestMessage !== undefined) {
-          readMessage(latestMessage.text);
+        const shouldPlayLastMessage =
+          !isPlaying &&
+          latestMessage !== undefined &&
+          latestMessage.type === "system";
+        if (shouldPlayLastMessage) {
+          readMessage(latestMessage.payload);
         } else {
           speechSynthesis.cancel();
           setDoc((prev) => {

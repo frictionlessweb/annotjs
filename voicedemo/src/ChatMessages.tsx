@@ -29,11 +29,12 @@ export const ChatMessages = () => {
             <ProgressCircle marginBottom="16px" size="L" isIndeterminate />
           </Flex>
         ) : null}
-        {messages.map((message) => {
+        {messages.map((message, index) => {
+          const key = `${JSON.stringify(message.payload) + index}`;
           if (message.type === "user") {
-            return <UserMessage key={message.text} text={message.text} />;
+            return <UserMessage key={key} message={message} />;
           }
-          return <SystemMessage key={message.text} text={message.text} />;
+          return <SystemMessage key={key} message={message}  />;
         })}
       </Fade>
     </div>

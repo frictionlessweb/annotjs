@@ -17,13 +17,12 @@ export const RecordButton = () => {
     onMessage: async (message: string) => {
       dispatch({
         type: "ADD_MESSAGE",
-        payload: { type: "user", text: message },
+        payload: { type: "user", payload: message },
       });
-      const res = await askChatGPT(message);
-      const text = JSON.stringify(res);
-      dispatch({ type: "ADD_MESSAGE", payload: { text, type: "system" } });
+      const payload = await askChatGPT(message);
+      dispatch({ type: "ADD_MESSAGE", payload: { payload, type: "system" } });
       try {
-        readMessage(text);
+        readMessage(payload);
       } catch (err) {
         console.error(err);
       }
