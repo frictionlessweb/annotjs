@@ -7,7 +7,7 @@ interface PdfViewerProps {
 }
 
 const DEFAULT_VIEW_CONFIG = {
-  embedMode: "LIGHT_BOX",
+  embedMode: "FULL_WINDOW",
 } as const;
 
 export const PDFViewer = (props: PdfViewerProps) => {
