@@ -68,7 +68,6 @@ const DEFAULT_VIEW_CONFIG = {
   showDownloadPDF: false,
   showFullScreen: false,
   showPrintPDF: false,
-  enableAnnotationAPIs: true,
   includePDFAnnotations: true,
 } as const;
 
@@ -96,14 +95,7 @@ export const PDFViewer = (props: PdfViewerProps) => {
           id: "id",
         },
       };
-      const preview = await view.previewFile(config, DEFAULT_VIEW_CONFIG);
-      // For mysterious reasons, if you don't call this function, the Embed API
-      // won't actually return the new annotation object to you.
-      const manager = await preview.getAnnotationManager();
-      await manager.setConfig({ showCommentsPanel: false });
-      // @ts-expect-error - We're attaching this in a dirty way.
-      window.manager = manager;
-      setApis({ manager });
+      await view.previewFile(config, DEFAULT_VIEW_CONFIG);
     };
     viewDocument();
   }, [url, setApis, window.AdobeDC, viewerRef.current]);

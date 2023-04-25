@@ -20,7 +20,6 @@ const delay = (ms: number) => {
 };
 
 export const useReadMessage = (config: SpeechConfig = "the_answer") => {
-  const { apis } = usePDF();
   const {
     documentContext: { characters },
   } = useDocument();
@@ -47,43 +46,29 @@ export const useReadMessage = (config: SpeechConfig = "the_answer") => {
     theMessage.rate = 0.85;
     theMessage.text = answer;
     speechSynthesis.speak(theMessage);
-    // @ts-expect-error - We've attached it to the window object.
-    const manager = apis?.manager || window.manager;
-    const shouldUseAnnotationApi = isPDF && Boolean(manager);
     let initialPosition =
       document.getElementById("PDF_CONTAINER_DIV")?.scrollTop || 0;
-    if (res.annotations.length > 0) {
-      if (shouldUseAnnotationApi) {
-        try {
-          await manager.addAnnotations(res.annotations);
-          // @ts-expect-error - At runtime, the object has an ID.
-          await manager.selectAnnotation(res.annotations[0].id);
-        } catch (err) {
-          console.error(err);
-        }
-      } else if (page !== -1) {
-        if (isPDF) {
-          dispatch({ type: "SET_HTML" });
-        }
-        setDoc((prev) => {
-          return {
-            ...prev,
-            pdfString: highlightSource(prev.pdfString, theSource!),
-          };
-        });
-        // We need to let the next microtask occur so we can actually grab the div and adjust
-        // the scroll position.
-        await delay(0);
-        const theDiv = document.getElementById("PDF_CONTAINER_DIV");
-        if (theDiv !== null) {
-          const matchingElements = [
-            ...document.querySelectorAll("span"),
-          ].filter(
-            // @ts-expect-error - We know there's a valid textContent field.
-            (span) => span.textContent.includes(theSource)
-          );
-          const matchingElement = matchingElements[matchingElements.length - 1];
-          if (matchingElement === undefined) return;
+    if (res.annotations.length > 0 && theSource !== undefined) {
+      if (isPDF) {
+        dispatch({ type: "SET_HTML" });
+      }
+      setDoc((prev) => {
+        return {
+          ...prev,
+          pdfString: highlightSource(prev.pdfString, theSource!),
+        };
+      });
+      // We need to let the next microtask occur so we can actually grab the div and adjust
+      // the scroll position.
+      await delay(0);
+      const theDiv = document.getElementById("PDF_CONTAINER_DIV");
+      if (theDiv !== null) {
+        const matchingElements = [...document.querySelectorAll("span")].filter(
+          // @ts-expect-error - We know there's a valid textContent field.
+          (span) => span.textContent.includes(theSource)
+        );
+        const matchingElement = matchingElements[matchingElements.length - 1];
+        if (matchingElement !== undefined) {
           theDiv.scrollTop = 0;
           const newTop = matchingElement.getBoundingClientRect().top - 10;
           theDiv.scrollTop = newTop;
@@ -98,15 +83,10 @@ export const useReadMessage = (config: SpeechConfig = "the_answer") => {
         isPlaying: true,
       };
     });
+
     theMessage.onend = async () => {
       if (res.annotations.length > 0) {
-        if (shouldUseAnnotationApi) {
-          try {
-            await manager.removeAnnotationsFromPDF();
-          } catch (err) {
-            console.error(err);
-          }
-        } else if (page !== -1) {
+        if (page !== -1) {
           setDoc((prev) => {
             return {
               ...prev,
