@@ -9,18 +9,26 @@ import {
   TypedUseSelectorHook,
 } from "react-redux";
 import produce from "immer";
+import { ApiResponse } from "../util/askChatGPT";
 
-export interface Message {
-  type: "user" | "system";
-  text: string;
+export interface UserResponse {
+  type: "user";
+  payload: string;
 }
+
+export interface SystemResponse {
+  type: "system";
+  payload: ApiResponse;
+}
+
+export type Message = UserResponse | SystemResponse;
 
 type Action =
   | { type: "ADD_MESSAGE"; payload: Message }
   | { type: "START_LOADING" }
   | { type: "STOP_LOADING" }
-  | { type: 'TOGGLE_PDF' }
-  | { type: 'SET_HTML' };
+  | { type: "TOGGLE_PDF" }
+  | { type: "SET_HTML" };
 
 interface AppState {
   isLoading: boolean;
@@ -45,12 +53,12 @@ export const reduce = (
         draft.isLoading = true;
       });
     }
-    case 'TOGGLE_PDF': {
+    case "TOGGLE_PDF": {
       return produce(prev, (draft) => {
         draft.isPDF = !draft.isPDF;
       });
     }
-    case 'SET_HTML': {
+    case "SET_HTML": {
       return produce(prev, (draft) => {
         draft.isPDF = false;
       });

@@ -1,13 +1,7 @@
 // @ts-nocheck
 const isBrowser = typeof window !== "undefined";
-let canSpellcheck = true;
-let spellchecker = null;
-
-if (!isBrowser) {
-    spellchecker = require("spellchecker");
-} else {
-    canSpellcheck = false;
-}
+const canSpellcheck = false;
+const spellchecker = null;
 
 function Grammarify() {
 

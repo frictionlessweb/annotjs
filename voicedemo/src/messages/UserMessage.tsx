@@ -2,15 +2,18 @@ import React from "react";
 import { Flex, Text } from "@adobe/react-spectrum";
 import { CHAT_TEXT_COLOR, CHAT_USER_BACKGROUND_COLOR } from "../util/constants";
 import { grammarify } from "../util/grammarify";
+import { UserResponse } from "../providers/StateProvider";
 
 const clean: (str: string) => string = grammarify.clean;
 
 interface UserMessageProps {
-  text: string;
+  message: UserResponse;
 }
 
 export const UserMessage = (props: UserMessageProps) => {
-  const { text } = props;
+  const {
+    message: { payload: text },
+  } = props;
   return (
     <Flex
       UNSAFE_style={{
