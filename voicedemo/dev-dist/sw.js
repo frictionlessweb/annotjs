@@ -67,10 +67,13 @@ if (!self.define) {
     });
   };
 }
-define(['./workbox-190d91d4'], (function (workbox) { 'use strict';
+define(['./workbox-885460c7'], (function (workbox) { 'use strict';
 
-  self.skipWaiting();
-  workbox.clientsClaim();
+  self.addEventListener('message', event => {
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+      self.skipWaiting();
+    }
+  });
 
   /**
    * The precacheAndRoute() method efficiently caches and responds to
