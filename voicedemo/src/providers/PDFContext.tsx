@@ -36,7 +36,9 @@ export const PDFViewer = (props: PdfViewerProps) => {
       await view.previewFile(config, DEFAULT_VIEW_CONFIG);
     };
     viewDocument();
-  }, [url]);
+    // We actually DO need to track when window.AdobeDC and viewerRef.current change
+    // eslint-disable-next-line
+  }, [url, window.AdobeDC, viewerRef.current]);
   if (!isPDF) {
     return <ReactView />;
   }
