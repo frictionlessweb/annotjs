@@ -2,7 +2,6 @@ import React from "react";
 import html from "./html.json";
 
 interface DocumentProvider {
-  currentPage: number;
   isPlaying: boolean;
   pdfString: string;
   divRef: React.MutableRefObject<HTMLDivElement | null>;
@@ -42,7 +41,6 @@ export const DocumentProvider = (props: DocumentProviderProps) => {
   const { children } = props;
   const divRef = React.useRef<HTMLDivElement | null>(null);
   const [state, setState] = React.useState<DocumentProvider>({
-    currentPage: 1,
     isPlaying: false,
     pdfString: html.html,
     divRef: divRef,

@@ -1,7 +1,5 @@
-import { useDoc, useSetDoc } from "../providers/DocumentProvider";
+import { useSetDoc } from "../providers/DocumentProvider";
 import { useSelector, useDispatch } from "../providers/StateProvider";
-import { useDocument, pageOfString } from "annotjs";
-import { usePDF } from "../providers/PDFContext";
 import { ApiResponse } from "./askChatGPT";
 import html from "../providers/html.json";
 
@@ -20,9 +18,6 @@ const delay = (ms: number) => {
 };
 
 export const useReadMessage = (config: SpeechConfig = "the_answer") => {
-  const {
-    documentContext: { characters },
-  } = useDocument();
   const setDoc = useSetDoc();
   const isPDF = useSelector((state) => state.isPDF);
   const dispatch = useDispatch();
@@ -34,10 +29,9 @@ export const useReadMessage = (config: SpeechConfig = "the_answer") => {
     const res = response.payload;
     let answer = res.answer.answer;
     const theSource = res.answer.sources.find((source) => {
-      return pageOfString(source, characters) !== -1;
+      return html.html.indexOf(source) !== -1;
     });
-    const page = pageOfString(theSource || res.answer.sources[0], characters);
-    if (page === -1) {
+    if (theSource === undefined) {
       answer = `I couldn't find that information in the document. Here's what I know: ${answer}`;
     } else if (config === "the_source" && theSource !== undefined) {
       answer = theSource;
@@ -55,7 +49,7 @@ export const useReadMessage = (config: SpeechConfig = "the_answer") => {
       setDoc((prev) => {
         return {
           ...prev,
-          pdfString: highlightSource(prev.pdfString, theSource!),
+          pdfString: highlightSource(prev.pdfString, theSource),
         };
       });
       // We need to let the next microtask occur so we can actually grab the div and adjust
@@ -79,14 +73,13 @@ export const useReadMessage = (config: SpeechConfig = "the_answer") => {
     setDoc((prev) => {
       return {
         ...prev,
-        currentPage: page !== -1 ? page + 1 : prev.currentPage,
         isPlaying: true,
       };
     });
 
     theMessage.onend = async () => {
       if (res.annotations.length > 0) {
-        if (page !== -1) {
+        if (theSource !== undefined) {
           setDoc((prev) => {
             return {
               ...prev,

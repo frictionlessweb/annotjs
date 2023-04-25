@@ -5,4 +5,4 @@ export const RESIZE_STYLE = {
 
 export const CHAT_TEXT_COLOR = 'rgb(86, 90, 93)';
 export const CHAT_USER_BACKGROUND_COLOR = 'rgb(227, 241, 254)';
-
+export const NUM_PAGES = 4;

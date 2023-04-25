@@ -2,63 +2,6 @@ import React from "react";
 import { useSelector } from "./StateProvider";
 import { ReactView } from "./ReactView";
 
-interface PDFHandlers {
-  apis: any;
-  setApis: (apis: any) => void;
-}
-
-export const PDFContext = React.createContext<PDFHandlers | null>(null);
-
-export const usePDF = () => {
-  const ctx = React.useContext(PDFContext);
-  if (ctx === null) {
-    throw new Error(`Please use usePDF inside of its provider.`);
-  }
-  return ctx;
-};
-
-interface PDFViewerProps {
-  url: string;
-}
-
-declare global {
-  interface Window {
-    AdobeDC: any;
-  }
-}
-
-interface HasIdAndText {
-  id: string;
-  [data: string]: unknown;
-}
-
-interface AdobeEvent {
-  type: string;
-  data: unknown;
-}
-
-interface AdobeAnnotationAddedEvent {
-  type: "ANNOTATION_ADDED";
-  data: {
-    id: string;
-    target: {
-      selector: {
-        node: {
-          index: number;
-        };
-        quadPoints: Array<number>;
-      };
-    };
-  };
-}
-
-interface AdobeAnnotationDeletedEvent {
-  type: "ANNOTATION_DELETED";
-  data: {
-    id: string;
-  };
-}
-
 interface PdfViewerProps {
   url: string;
 }
@@ -74,7 +17,6 @@ const DEFAULT_VIEW_CONFIG = {
 export const PDFViewer = (props: PdfViewerProps) => {
   const { url } = props;
   const viewerRef = React.useRef(null);
-  const { setApis } = usePDF();
   const isPDF = useSelector((state) => state.isPDF);
   React.useEffect(() => {
     const viewDocument = async () => {
@@ -98,7 +40,7 @@ export const PDFViewer = (props: PdfViewerProps) => {
       await view.previewFile(config, DEFAULT_VIEW_CONFIG);
     };
     viewDocument();
-  }, [url, setApis, window.AdobeDC, viewerRef.current]);
+  }, [url]);
   if (!isPDF) {
     return <ReactView />;
   }
