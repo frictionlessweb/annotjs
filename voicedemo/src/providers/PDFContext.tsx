@@ -8,10 +8,6 @@ interface PdfViewerProps {
 
 const DEFAULT_VIEW_CONFIG = {
   embedMode: "FULL_WINDOW",
-  showDownloadPDF: false,
-  showFullScreen: false,
-  showPrintPDF: false,
-  includePDFAnnotations: true,
 } as const;
 
 export const PDFViewer = (props: PdfViewerProps) => {
