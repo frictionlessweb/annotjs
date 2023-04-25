@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "./StateProvider";
-import { ReactView } from './ReactView';
+import { ReactView } from "./ReactView";
 
 interface PDFHandlers {
   apis: any;
@@ -108,13 +108,18 @@ export const PDFViewer = (props: PdfViewerProps) => {
     viewDocument();
   }, [url, setApis, window.AdobeDC, viewerRef.current]);
   if (!isPDF) {
-    return <ReactView />
+    return <ReactView />;
   }
   return (
     <div
       ref={viewerRef}
       id="adobe-dc-view"
-      style={{ width: "100%", height: "100%", position: "absolute", zIndex: 1 }}
+      style={{
+        width: "100%",
+        height: "100%",
+        position: "absolute",
+        zIndex: 1,
+      }}
     />
   );
 };

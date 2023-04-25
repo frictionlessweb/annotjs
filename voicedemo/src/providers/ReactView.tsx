@@ -2,20 +2,12 @@ import React from "react";
 import { useDoc } from "./DocumentProvider";
 
 export const ReactView = () => {
-  const { pdfString } = useDoc();
-  const [scroll, setScroll] = React.useState(0);
-  const divRef = React.useRef<HTMLDivElement>(null);
-  React.useEffect(() => {
-    if (!divRef.current) return;
-    divRef.current.scrollTop = scroll;
-  }, [pdfString, scroll]);
+  const { pdfString, divRef } = useDoc();
   return (
     <div
-      onScroll={() => {
-        setScroll(divRef.current?.scrollTop || 0);
-      }}
-      style={{ overflowY: "scroll", height: "100vh" }}
+      id="PDF_CONTAINER_DIV"
       ref={divRef}
+      style={{ overflowY: "scroll", height: "100vh" }}
       dangerouslySetInnerHTML={{ __html: pdfString }}
     />
   );

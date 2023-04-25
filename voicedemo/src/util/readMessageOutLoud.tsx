@@ -1,5 +1,5 @@
-import { useSetDoc } from "../providers/DocumentProvider";
-import { useSelector } from "../providers/StateProvider";
+import { useDoc, useSetDoc } from "../providers/DocumentProvider";
+import { useSelector, useDispatch } from "../providers/StateProvider";
 import { useDocument, pageOfString } from "annotjs";
 import { usePDF } from "../providers/PDFContext";
 import { ApiResponse } from "./askChatGPT";
@@ -8,14 +8,15 @@ import html from "../providers/html.json";
 type SpeechConfig = "the_answer" | "the_source";
 
 const highlightSource = (pdfString: string, theSource: string): string => {
-  console.log(pdfString);
-  console.log(pdfString.indexOf('In 2022,'));
   const res = pdfString.replaceAll(
     theSource,
     `<span style="background-color: yellow;">${theSource}</span>`
   );
-  console.log(res === pdfString);
   return res;
+};
+
+const delay = (ms: number) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
 export const useReadMessage = (config: SpeechConfig = "the_answer") => {
@@ -25,6 +26,7 @@ export const useReadMessage = (config: SpeechConfig = "the_answer") => {
   } = useDocument();
   const setDoc = useSetDoc();
   const isPDF = useSelector((state) => state.isPDF);
+  const dispatch = useDispatch();
   const readMessage = async (message: string) => {
     const response: ApiResponse = JSON.parse(message);
     if (response.type === "BAD_RESPONSE") {
@@ -48,6 +50,8 @@ export const useReadMessage = (config: SpeechConfig = "the_answer") => {
     // @ts-expect-error - We've attached it to the window object.
     const manager = apis?.manager || window.manager;
     const shouldUseAnnotationApi = isPDF && Boolean(manager);
+    let initialPosition =
+      document.getElementById("PDF_CONTAINER_DIV")?.scrollTop || 0;
     if (res.annotations.length > 0) {
       if (shouldUseAnnotationApi) {
         try {
@@ -58,12 +62,33 @@ export const useReadMessage = (config: SpeechConfig = "the_answer") => {
           console.error(err);
         }
       } else if (page !== -1) {
+        if (isPDF) {
+          dispatch({ type: "SET_HTML" });
+        }
         setDoc((prev) => {
           return {
             ...prev,
             pdfString: highlightSource(prev.pdfString, theSource!),
           };
         });
+        // We need to let the next microtask occur so we can actually grab the div and adjust
+        // the scroll position.
+        await delay(0);
+        const theDiv = document.getElementById("PDF_CONTAINER_DIV");
+        if (theDiv !== null) {
+          const matchingElements = [
+            ...document.querySelectorAll("span"),
+          ].filter(
+            // @ts-expect-error - We know there's a valid textContent field.
+            (span) => span.textContent.includes(theSource)
+          );
+          const matchingElement = matchingElements[matchingElements.length - 1];
+          if (matchingElement === undefined) return;
+          theDiv.scrollTop = 0;
+          const newTop = matchingElement.getBoundingClientRect().top - 10;
+          theDiv.scrollTop = newTop;
+          initialPosition = newTop;
+        }
       }
     }
     setDoc((prev) => {
@@ -88,6 +113,10 @@ export const useReadMessage = (config: SpeechConfig = "the_answer") => {
               pdfString: html.html,
             };
           });
+          const theDiv = document.getElementById("PDF_CONTAINER_DIV");
+          if (theDiv !== null) {
+            theDiv.scrollTop = initialPosition;
+          }
         }
       }
       setDoc((prev) => {

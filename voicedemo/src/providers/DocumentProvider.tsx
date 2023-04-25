@@ -5,6 +5,7 @@ interface DocumentProvider {
   currentPage: number;
   isPlaying: boolean;
   pdfString: string;
+  divRef: React.MutableRefObject<HTMLDivElement | null>;
 }
 
 const DocumentProviderContext = React.createContext<DocumentProvider | null>(
@@ -39,10 +40,12 @@ export const useSetDoc = () => {
 
 export const DocumentProvider = (props: DocumentProviderProps) => {
   const { children } = props;
+  const divRef = React.useRef<HTMLDivElement | null>(null);
   const [state, setState] = React.useState<DocumentProvider>({
     currentPage: 1,
     isPlaying: false,
     pdfString: html.html,
+    divRef: divRef,
   });
   return (
     <DocumentProviderContext.Provider value={state}>

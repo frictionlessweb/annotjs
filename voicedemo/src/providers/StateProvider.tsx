@@ -19,7 +19,8 @@ type Action =
   | { type: "ADD_MESSAGE"; payload: Message }
   | { type: "START_LOADING" }
   | { type: "STOP_LOADING" }
-  | { type: 'TOGGLE_PDF' };
+  | { type: 'TOGGLE_PDF' }
+  | { type: 'SET_HTML' };
 
 interface AppState {
   isLoading: boolean;
@@ -49,6 +50,11 @@ export const reduce = (
         draft.isPDF = !draft.isPDF;
       });
     }
+    case 'SET_HTML': {
+      return produce(prev, (draft) => {
+        draft.isPDF = false;
+      });
+    }
     case "STOP_LOADING": {
       return produce(prev, (draft) => {
         draft.isLoading = false;
@@ -64,6 +70,7 @@ export const reduce = (
           }
           case "system": {
             draft.isLoading = false;
+            draft.isPDF = false;
             break;
           }
         }
