@@ -23,16 +23,15 @@ export const Questions = (props: QuestionProps) => {
               if (isLoading) return;
               dispatch({
                 type: "ADD_MESSAGE",
-                payload: { type: "user", text: question },
+                payload: { type: "user", payload: question },
               });
               const res = await askChatGPT(question);
-              const stringified = JSON.stringify(res);
               dispatch({
                 type: "ADD_MESSAGE",
-                payload: { type: "system", text: stringified },
+                payload: { type: "system", payload: res },
               });
               try {
-                readMessage(stringified);
+                readMessage(res);
               } catch (err) {
                 console.error(err);
               }
